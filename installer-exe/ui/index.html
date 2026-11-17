@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sprinkle Client Installer</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    color: #fff;
+    background: linear-gradient(180deg, #2ea1fc 0%, #0b5cc2 100%);
+    display: flex; flex-direction: column; align-items: center;
+    overflow: hidden; user-select: none;
+  }
+  #sprinkles { position: fixed; inset: 0; pointer-events: none; }
+  .wrap { position: relative; width: 100%; max-width: 460px; padding: 26px 24px; text-align: center; flex: 1; display: flex; flex-direction: column; }
+  .donut { width: 150px; height: 150px; margin: 4px auto 6px; animation: bob 3s ease-in-out infinite; filter: drop-shadow(0 6px 0 rgba(2,11,53,.35)); }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-6px) rotate(4deg); } }
+  h1 { margin: 6px 0 0; font-size: 34px; letter-spacing: 1px; text-shadow: 3px 3px 0 #020b35; }
+  .sub { margin: 4px 0 18px; color: #d8ecff; font-size: 14px; }
+  .btn {
+    display: block; width: 100%; border: 3px solid #020b35; border-radius: 10px;
+    background: #0370ff; color: #fff; font-weight: 800; font-size: 26px; letter-spacing: 2px;
+    padding: 16px 0; cursor: pointer; box-shadow: 0 6px 0 #020b35; transition: transform .08s, background .15s;
+  }
+  .btn:hover { background: #3d93ff; transform: translateY(-2px); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #020b35; }
+  .btn:disabled { background: #4a5a75; cursor: default; transform: none; }
+  .btn.small { font-size: 15px; padding: 10px 0; letter-spacing: 0; margin-top: 10px; box-shadow: 0 4px 0 #020b35; background: #af7f52; }
+  .btn.small:hover { background: #d7a673; }
+  .bar { height: 16px; border: 3px solid #020b35; border-radius: 8px; background: #af7f52; margin-top: 18px; overflow: hidden; display: none; }
+  .bar > div { height: 100%; width: 0; background: repeating-linear-gradient(90deg, #0370ff 0 14px, #3d93ff 14px 18px); transition: width .25s; }
+  .msg { min-height: 22px; margin-top: 10px; font-size: 14px; color: #fff3b0; }
+  .opts-link { margin-top: 14px; color: #d8ecff; font-size: 13px; cursor: pointer; text-decoration: underline; }
+  .opts { display: none; text-align: left; background: rgba(2,11,53,.55); border: 2px solid #020b35; border-radius: 10px; padding: 10px 14px; margin-top: 10px; max-height: 210px; overflow: auto; font-size: 13px; }
+  .opts h3 { margin: 8px 0 4px; font-size: 12px; color: #d7a673; text-transform: uppercase; letter-spacing: 1px; }
+  .opts label { display: flex; gap: 8px; align-items: center; padding: 3px 0; cursor: pointer; }
+  .opts label span { color: #b9d6f5; font-size: 12px; }
+  .foot { margin-top: auto; padding-top: 14px; font-size: 11px; color: #cfe6ff; opacity: .85; }
+  select { background: #0370ff; color: #fff; border: 2px solid #020b35; border-radius: 6px; padding: 2px 6px; }
+</style>
+</head>
+<body>
+<canvas id="sprinkles"></canvas>
+<div class="wrap">
+  <img class="donut" src="{{donut.png}}" alt="">
+  <h1>Sprinkle Client</h1>
+  <div class="sub" id="sub">Donut SMP client &middot; Minecraft 1.21.11 &middot; Fabric</div>
+  <button class="btn" id="install">INSTALL</button>
+  <div class="bar" id="bar"><div id="fill"></div></div>
+  <div class="msg" id="msg"></div>
+  <div id="after" style="display:none">
+    <button class="btn small" id="launcher">Open Minecraft Launcher</button>
+    <button class="btn small" id="folder">Open Sprinkle folder</button>
+  </div>
+  <div class="opts-link" id="optsLink">Options</div>
+  <div class="opts" id="opts"></div>
+  <div class="foot">Made by DarkerDawnFR &middot; Fan-made, not affiliated with DrDonut or Donut SMP</div>
+</div>
+<script>
+let state = null;
+const $ = id => document.getElementById(id);
+
+// falling sprinkles
+(() => {
+  const c = $("sprinkles"), g = c.getContext("2d");
+  const cols = ["#ff6fb1", "#ffe15c", "#7cff8a", "#ffffff", "#ff9f43", "#b98cff"];
+  let bits = [];
+  function size() { c.width = innerWidth; c.height = innerHeight; }
+  size(); addEventListener("resize", size);
+  for (let i = 0; i < 60; i++) bits.push({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, v: .3 + Math.random() * .8, r: Math.random() * 6.28, c: cols[i % cols.length] });
+  (function frame() {
+    g.clearRect(0, 0, c.width, c.height);
+    for (const b of bits) {
+      b.y += b.v; b.r += .02; if (b.y > c.height + 10) { b.y = -10; b.x = Math.random() * c.width; }
+      g.save(); g.translate(b.x, b.y); g.rotate(b.r); g.fillStyle = b.c; g.globalAlpha = .55; g.fillRect(-4, -1.2, 8, 2.4); g.restore();
+    }
+    requestAnimationFrame(frame);
+  })();
+})();
+
+function renderOpts() {
+  const o = $("opts");
+  let html = '<label>RAM for Minecraft: <select id="ram">' + [2,3,4,6,8,12].map(g => `<option value="${g}" ${state.settings.ram == g ? "selected" : ""}>${g} GB</option>`).join("") + '</select></label>';
+  for (const cat of Object.keys(state.catalog)) {
+    html += `<h3>${cat}</h3>`;
+    for (const m of state.catalog[cat]) {
+      html += `<label><input type="checkbox" data-slug="${m.slug}" ${state.settings.mods[m.slug] ? "checked" : ""}> ${m.name} <span>${m.desc}</span></label>`;
+    }
+  }
+  o.innerHTML = html;
+  o.querySelectorAll("input[type=checkbox]").forEach(cb => cb.onchange = () => { state.settings.mods[cb.dataset.slug] = cb.checked; save(); });
+  $("ram").onchange = e => { state.settings.ram = parseInt(e.target.value); save(); };
+}
+function save() { sprSave(JSON.stringify(state.settings)); }
+
+$("optsLink").onclick = () => { const o = $("opts"); o.style.display = o.style.display === "block" ? "none" : "block"; };
+$("install").onclick = () => {
+  $("install").disabled = true;
+  $("install").textContent = "INSTALLING...";
+  $("bar").style.display = "block";
+  $("msg").textContent = "";
+  sprInstall();
+};
+$("launcher").onclick = async () => { const err = await sprLauncher(); if (err) $("msg").textContent = err; };
+$("folder").onclick = () => sprFolder();
+
+window.onProgress = (pct, msg) => { $("fill").style.width = Math.round(pct * 100) + "%"; $("msg").textContent = msg; };
+window.onDone = (ok, msg, skipped) => {
+  $("install").disabled = false;
+  $("install").textContent = ok ? "REINSTALL" : "TRY AGAIN";
+  $("msg").textContent = msg;
+  if (ok) {
+    $("fill").style.width = "100%";
+    $("after").style.display = "block";
+    const s = skipped ? Object.keys(skipped) : [];
+    if (s.length) $("msg").textContent += " (Skipped, not out for 1.21.11 yet: " + s.join(", ") + ")";
+  }
+};
+
+(async () => {
+  state = await sprState();
+  renderOpts();
+  if (!state.mcFound) $("msg").textContent = "Minecraft isn't installed yet. Install the Minecraft Launcher and press Play once first.";
+  if (state.installed) $("install").textContent = "REINSTALL / UPDATE";
+})();
+</script>
+</body>
+</html>

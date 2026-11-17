@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "sprinkleclient",
+  "version": "${version}",
+  "name": "Sprinkle Client",
+  "description": "A Donut SMP themed client. Every button takes you to Donut SMP. Fan-made, not affiliated with DrDonut or Donut SMP.",
+  "authors": ["DarkerDawnFR"],
+  "license": "All-Rights-Reserved",
+  "icon": "assets/sprinkleclient/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["fr.darkerdawn.sprinkle.SprinkleClient"]
+  },
+  "mixins": ["sprinkleclient.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

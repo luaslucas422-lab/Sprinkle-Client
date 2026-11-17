@@ -1,0 +1,7 @@
+.gradle/
+build/
+mod/run/
+*.class
+installer-exe/embed/*.jar
+dist/
+shots/

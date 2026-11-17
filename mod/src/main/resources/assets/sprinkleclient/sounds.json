@@ -1,0 +1,8 @@
+{
+  "cash": { "sounds": ["sprinkleclient:cash"] },
+  "rage_quit": { "sounds": ["sprinkleclient:rage_quit"] },
+  "menu_music": { "category": "music", "sounds": [{ "name": "sprinkleclient:menu_music", "stream": true }] },
+  "alarm": { "sounds": ["sprinkleclient:alarm"] },
+  "flex": { "sounds": ["sprinkleclient:flex"] },
+  "pop": { "sounds": ["sprinkleclient:pop"] }
+}

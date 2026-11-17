@@ -1,0 +1,15 @@
+{
+  "key.category.sprinkleclient.sprinkle": "Sprinkle Client (Donut SMP)",
+  "key.sprinkleclient.menu": "Open Donut Mods menu",
+  "key.sprinkleclient.edit_scoreboard": "Edit Fake Scoreboard",
+  "key.sprinkleclient.set_base": "Base Alarm: set base here",
+  "key.sprinkleclient.toggle.money_hud": "Toggle Money HUD",
+  "key.sprinkleclient.toggle.fake_scoreboard": "Toggle Fake Scoreboard",
+  "key.sprinkleclient.toggle.streamer_mode": "Toggle Streamer Mode",
+  "key.sprinkleclient.toggle.pvp_hud": "Toggle PvP HUD",
+  "key.sprinkleclient.toggle.death_saver": "Toggle Death Saver",
+  "key.sprinkleclient.toggle.spawner_calc": "Toggle Spawner Calculator",
+  "key.sprinkleclient.toggle.base_alarm": "Toggle Base Alarm",
+  "key.sprinkleclient.toggle.rich_flex": "Toggle Rich Flex",
+  "key.sprinkleclient.toggle.sky_changer": "Toggle Sky Changer"
+}

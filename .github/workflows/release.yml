@@ -1,0 +1,35 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get the latest successful build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN=$(gh run list -R "${{ github.repository }}" -w Build -b main -s success -L 1 --json databaseId -q '.[0].databaseId')
+          mkdir -p out
+          gh run download "$RUN" -R "${{ github.repository }}" -n SprinkleClient-Installer-exe -D out
+          gh run download "$RUN" -R "${{ github.repository }}" -n SprinkleClient-Installer-jar -D out
+          gh run download "$RUN" -R "${{ github.repository }}" -n SprinkleClient-mod -D out
+          rm -f out/SprinkleClient-selftest.exe
+          ls -la out
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ inputs.tag }}" out/* \
+            --title "Sprinkle Client ${{ inputs.tag }}" \
+            --notes "The Donut SMP client. Windows: run **SprinkleClient-Installer.exe**. Mac/Linux: run **SprinkleClient-Installer.jar**. Then open the Minecraft Launcher, pick Sprinkle Client and press Play. Minecraft 1.21.11 (Fabric). Fan-made, not affiliated with DrDonut or Donut SMP." \
+            --repo "${{ github.repository }}"

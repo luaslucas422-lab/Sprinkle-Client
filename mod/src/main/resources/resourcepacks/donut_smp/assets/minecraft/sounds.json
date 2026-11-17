@@ -1,0 +1,222 @@
+{
+  "entity.pig.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1"
+      },
+      {
+        "name": "sprinkleclient:meow2"
+      },
+      {
+        "name": "sprinkleclient:meow3"
+      }
+    ],
+    "subtitle": "Donut pig meows"
+  },
+  "entity.pig.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow_hurt"
+      }
+    ],
+    "subtitle": "Donut pig: MEOW!"
+  },
+  "entity.pig.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow_sad"
+      }
+    ],
+    "subtitle": "Donut pig has been eaten"
+  },
+  "entity.pig_mini.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1",
+        "pitch": 1.4
+      },
+      {
+        "name": "sprinkleclient:meow2",
+        "pitch": 1.4
+      },
+      {
+        "name": "sprinkleclient:meow3",
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "Donut pig meows"
+  },
+  "entity.pig_mini.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow_hurt",
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "Donut pig: MEOW!"
+  },
+  "entity.pig_mini.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow_sad",
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "Donut pig has been eaten"
+  },
+  "entity.pig_big.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1",
+        "pitch": 0.7
+      },
+      {
+        "name": "sprinkleclient:meow2",
+        "pitch": 0.7
+      },
+      {
+        "name": "sprinkleclient:meow3",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "Donut pig meows"
+  },
+  "entity.pig_big.hurt": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow_hurt",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "Donut pig: MEOW!"
+  },
+  "entity.pig_big.death": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow_sad",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "Donut pig has been eaten"
+  },
+  "entity.cow.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1",
+        "pitch": 0.55
+      },
+      {
+        "name": "sprinkleclient:meow2",
+        "pitch": 0.55
+      },
+      {
+        "name": "sprinkleclient:meow3",
+        "pitch": 0.55
+      }
+    ],
+    "subtitle": "Cow meows (deeply)"
+  },
+  "entity.cow_moody.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1",
+        "pitch": 0.55
+      },
+      {
+        "name": "sprinkleclient:meow2",
+        "pitch": 0.55
+      },
+      {
+        "name": "sprinkleclient:meow3",
+        "pitch": 0.55
+      }
+    ],
+    "subtitle": "Cow meows (deeply)"
+  },
+  "entity.chicken.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1",
+        "pitch": 1.7
+      },
+      {
+        "name": "sprinkleclient:meow2",
+        "pitch": 1.7
+      },
+      {
+        "name": "sprinkleclient:meow3",
+        "pitch": 1.7
+      }
+    ],
+    "subtitle": "Chicken meows"
+  },
+  "entity.chicken_picky.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:meow1",
+        "pitch": 1.7
+      },
+      {
+        "name": "sprinkleclient:meow2",
+        "pitch": 1.7
+      },
+      {
+        "name": "sprinkleclient:meow3",
+        "pitch": 1.7
+      }
+    ],
+    "subtitle": "Chicken meows"
+  },
+  "entity.sheep.ambient": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:cash"
+      }
+    ],
+    "subtitle": "Sheep: ka-ching"
+  },
+  "entity.experience_orb.pickup": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:coin",
+        "volume": 0.6
+      }
+    ],
+    "subtitle": "Coins!"
+  },
+  "entity.player.levelup": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:flex",
+        "volume": 0.7
+      }
+    ],
+    "subtitle": "Level up flex"
+  },
+  "entity.item.pickup": {
+    "replace": true,
+    "sounds": [
+      {
+        "name": "sprinkleclient:pop",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "Item popped in"
+  }
+}

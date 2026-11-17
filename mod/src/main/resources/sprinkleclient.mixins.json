@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "fr.darkerdawn.sprinkle.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftClientMixin",
+    "ChatHudMixin",
+    "DebugHudMixin",
+    "ClientPlayNetworkHandlerMixin"
+  ],
+  "injectors": { "defaultRequire": 0 }
+}
