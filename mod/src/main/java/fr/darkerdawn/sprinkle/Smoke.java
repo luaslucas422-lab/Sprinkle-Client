@@ -118,7 +118,7 @@ final class Smoke {
                             w.setBlockState(net.minecraft.util.math.BlockPos.ofFloored(p.getX() + i, p.getY() + 1, p.getZ() + 7), net.minecraft.block.Blocks.DEEPSLATE.getDefaultState());
                         }
                         for (int i = 0; i < 3; i++) {
-                            var pig = EntityType.PIG.create(w, SpawnReason.COMMAND);
+                            var pig = fr.darkerdawn.sprinkle.compat.Compat.spawnTestPig(w);
                             if (pig instanceof MobEntity m) {
                                 m.refreshPositionAndAngles(p.getX() - 2 + i * 2, p.getY(), p.getZ() + 4, 180, 0);
                                 m.setAiDisabled(true);
@@ -151,8 +151,7 @@ final class Smoke {
                 Config.save();
                 try { Files.deleteIfExists(SkyChanger.dir().resolve("smoke_sky.png")); } catch (Exception ignored) { }
                 c.setScreen(null);
-                c.world.disconnect(ClientWorld.QUITTING_MULTIPLAYER_TEXT);
-                c.disconnectWithSavingScreen();
+                fr.darkerdawn.sprinkle.compat.Compat.leaveWorld(c);
                 c.setScreen(new TitleScreen());
                 titleTicks = 0;
             }

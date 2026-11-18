@@ -68,6 +68,16 @@ public final class Compat {
         ScreenMouseEvents.beforeMouseClick(screen).register((s, click) -> r.run());
     }
 
+    /** Smoke test helpers. */
+    public static net.minecraft.entity.Entity spawnTestPig(net.minecraft.server.world.ServerWorld w) {
+        return net.minecraft.entity.EntityType.PIG.create(w, net.minecraft.entity.SpawnReason.COMMAND);
+    }
+
+    public static void leaveWorld(MinecraftClient c) {
+        c.world.disconnect(net.minecraft.client.world.ClientWorld.QUITTING_MULTIPLAYER_TEXT);
+        c.disconnectWithSavingScreen();
+    }
+
     public static boolean isClient(World w) {
         return w.isClient();
     }

@@ -5,8 +5,9 @@ plugins {
 // Multi-version: -Pmc=1.21.9 builds for another Minecraft version.
 // Files in versions/<mc>/java replace the file with the same path in src/main/java.
 def mc = project.findProperty('mc') ?: project.minecraft_version
-def overlay = file("versions/${mc}/java")
-def overlayRes = file("versions/${mc}/resources")
+def ov = (mc == '1.21') ? '1.21.1' : mc
+def overlay = file("versions/${ov}/java")
+def overlayRes = file("versions/${ov}/resources")
 version = "${project.mod_version}+mc${mc}"
 group = 'fr.darkerdawn.sprinkle'
 base { archivesName = 'SprinkleClient' }

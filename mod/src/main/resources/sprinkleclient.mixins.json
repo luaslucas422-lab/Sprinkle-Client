@@ -8,7 +8,8 @@
     "DebugHudMixin",
     "ClientPlayNetworkHandlerMixin",
     "ItemStackMixin",
-    "AbstractBlockMixin"
+    "AbstractBlockMixin",
+    "InGameHudMixin"
   ],
   "injectors": { "defaultRequire": 0 }
 }

@@ -6,7 +6,6 @@ import fr.darkerdawn.sprinkle.Sounds;
 import fr.darkerdawn.sprinkle.feature.FakeScoreboard;
 import fr.darkerdawn.sprinkle.feature.Hud;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
@@ -18,10 +17,6 @@ public final class Hooks {
 
     public static void register() {
         HudElementRegistry.addLast(Sounds.id("donut_mods"), (g, tick) -> Hud.render(g));
-        HudElementRegistry.replaceElement(VanillaHudElements.SCOREBOARD, vanilla -> (g, tick) -> {
-            if (Config.get().fakeScoreboard) FakeScoreboard.render(g);
-            else vanilla.render(g, tick);
-        });
         WorldRenderEvents.BEFORE_ENTITIES.register(ctx -> SkyChanger.render(ctx.matrices(), ctx.consumers()));
     }
 
