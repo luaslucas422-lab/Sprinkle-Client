@@ -142,7 +142,7 @@ public class SprinkleTitleScreen extends Screen {
         drawLogo(g, now);
         if (Config.get().splashes) drawSplash(g, now);
 
-        g.drawTextWithShadow(textRenderer, "Sprinkle Client " + SprinkleClient.VERSION + " (Minecraft 1.21.11)", 2, height - 10, Theme.MUTED);
+        g.drawTextWithShadow(textRenderer, "Sprinkle Client " + SprinkleClient.VERSION + " (Minecraft " + fr.darkerdawn.sprinkle.compat.Compat.MC + ")", 2, height - 10, Theme.MUTED);
         int cw = textRenderer.getWidth(COPYRIGHT);
         g.drawTextWithShadow(textRenderer, COPYRIGHT, width - cw - 28, height - 10, 0xFFFFFFFF);
         String fan = "Fan-made. Not affiliated with Donut SMP.";
