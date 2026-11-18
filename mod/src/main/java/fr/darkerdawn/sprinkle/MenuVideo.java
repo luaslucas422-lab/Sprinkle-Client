@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public final class MenuVideo {
     private MenuVideo() {}
 
-    private static final int MAX_FRAMES = 240, TARGET_FPS = 15, MAX_W = 160;
+    private static final int MAX_FRAMES = 180, TARGET_FPS = 15, MAX_W = 360;
     private static final List<Identifier> frames = new ArrayList<>();
     private static final ConcurrentLinkedQueue<BufferedImage> pending = new ConcurrentLinkedQueue<>();
     private static volatile boolean started, decoding;
