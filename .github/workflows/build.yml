@@ -14,6 +14,12 @@ jobs:
         with: { distribution: temurin, java-version: 25 }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '9.8.2' }
+      - name: Pick the newest Yarn mappings for 1.21.11
+        run: |
+          Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/1.21.11 | jq -r '.[0].version')
+          echo "yarn: $Y"
+          [ -n "$Y" ] && [ "$Y" != null ] && sed -i "s/^yarn_mappings=.*/yarn_mappings=$Y/" mod/gradle.properties
+          grep yarn mod/gradle.properties | tee yarn.log
       - name: Build mod + unit tests
         working-directory: mod
         run: |
