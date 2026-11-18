@@ -1,4 +1,6 @@
 name: Test in game
+permissions:
+  contents: write
 on:
   push:
     branches: [main]
@@ -37,6 +39,7 @@ jobs:
         run: |
           printf 'onboardAccessibility:false\ntutorialStep:none\nnarrator:0\nsoundCategory_master:0.0\nguiScale:2\n' > run/options.txt
           xvfb-run -a -s "-screen 0 1280x720x24" timeout 1200 gradle runClient > client.out 2>&1 || echo "EXIT $?"
+          cp client.out client-full.out
           echo "=====CLIENTLOG"
           grep -nE "SPRINKLE|Sprinkle|sprinkleclient|ERROR|Exception|Caused by|at fr\.darkerdawn|Mixin|crash" run/logs/latest.log | cut -c1-400 | head -150 || true
           echo "=====TAIL"
@@ -44,8 +47,20 @@ jobs:
           for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "=====CRASH"; head -150 "$f"; }; done
           mkdir -p ../shots
           cp run/screenshots/*.png ../shots/ 2>/dev/null || true
+          cp client.out ../shots/client.out.txt 2>/dev/null || true
+          cp run/logs/latest.log ../shots/latest.log.txt 2>/dev/null || true
+          cp run/crash-reports/*.txt ../shots/ 2>/dev/null || true
           echo "=====END"
           grep -q "SPRINKLE-SMOKE\] done, failures=0" client.out run/logs/latest.log
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: screenshots, path: shots/*.png }
+        with: { name: screenshots, path: shots/* }
+      - name: Save results for review (branch ci-smoke)
+        if: always()
+        run: |
+          mkdir -p shots
+          cp mod/server.out shots/server.out.txt 2>/dev/null || true
+          cd shots && for f in *.png; do [ -f "$f" ] && convert "$f" -resize 960x -quality 80 "${f%.png}.jpg" && rm "$f"; done; true
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "smoke ${{ github.run_id }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-smoke

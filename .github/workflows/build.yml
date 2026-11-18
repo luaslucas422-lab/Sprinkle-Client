@@ -1,4 +1,6 @@
 name: Build
+permissions:
+  contents: write
 on:
   push:
     branches: [main]
@@ -14,7 +16,9 @@ jobs:
         with: { gradle-version: '9.8.2' }
       - name: Build mod + unit tests
         working-directory: mod
-        run: gradle build --stacktrace
+        run: |
+          set -o pipefail
+          gradle build --stacktrace 2>&1 | tee ../mod-build.log
       - name: Build the .jar installer
         run: |
           JAR=$(ls mod/build/libs/*.jar | grep -v sources | head -1)
@@ -25,7 +29,17 @@ jobs:
           cp "$JAR" dist/
           ls -la dist
       - name: Jar installer self-test (real Fabric + Modrinth downloads)
-        run: java -jar dist/SprinkleClient-Installer.jar --selftest "$RUNNER_TEMP/jartest"
+        run: |
+          set -o pipefail
+          java -jar dist/SprinkleClient-Installer.jar --selftest "$RUNNER_TEMP/jartest" 2>&1 | tee jar-selftest.log
+      - name: Save results for review (branch ci-build)
+        if: always()
+        run: |
+          mkdir -p /tmp/res && cp *.log /tmp/res/ 2>/dev/null || true
+          cp mod/build/reports/tests/test/index.html /tmp/res/tests.html 2>/dev/null || true
+          cd /tmp/res && echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "build ${{ github.run_id }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-build
       - uses: actions/upload-artifact@v4
         with:
           name: SprinkleClient-mod
@@ -47,6 +61,8 @@ jobs:
       - name: Build the Windows installer
         working-directory: installer-exe
         run: |
+          set -o pipefail
+          exec > >(tee ../exe-build.log) 2>&1
           go mod tidy
           ls -la embed
           go vet ./...
@@ -57,6 +73,13 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-H windowsgui -s -w" -o ../dist/SprinkleClient-Installer.exe .
           GOOS=windows GOARCH=amd64 go build -trimpath -o ../dist/SprinkleClient-selftest.exe .
           ls -la ../dist
+      - name: Save results for review (branch ci-exe)
+        if: always()
+        run: |
+          mkdir -p /tmp/res && cp exe-build.log /tmp/res/ 2>/dev/null || true
+          cd /tmp/res && echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "exe ${{ github.run_id }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-exe
       - uses: actions/upload-artifact@v4
         with: { name: SprinkleClient-Installer-exe, path: dist/*.exe }
 
@@ -70,6 +93,14 @@ jobs:
         shell: pwsh
         run: |
           $dir = Join-Path $env:RUNNER_TEMP "appdata"
-          & .\dist\SprinkleClient-selftest.exe --selftest $dir
+          & .\dist\SprinkleClient-selftest.exe --selftest $dir *>&1 | Tee-Object -FilePath exe-selftest.log
           if ($LASTEXITCODE -ne 0) { throw "installer self-test failed" }
           Get-ChildItem (Join-Path $dir ".sprinkleclient\mods") | Select-Object Name, Length | Format-Table -AutoSize
+      - name: Save results for review (branch ci-windows)
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p /tmp/res && cp exe-selftest.log /tmp/res/ 2>/dev/null || true
+          cd /tmp/res && echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "windows ${{ github.run_id }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-windows
