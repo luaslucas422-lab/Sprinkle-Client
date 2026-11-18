@@ -1,5 +1,6 @@
 package fr.darkerdawn.sprinkle.screen;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.Jokes;
 import fr.darkerdawn.sprinkle.Textures;
 import fr.darkerdawn.sprinkle.Theme;
@@ -38,17 +39,17 @@ public class CreditsScreen extends Screen {
         int px = cx - pw / 2, py = 12;
         Theme.panel(g, px, py, pw, ph);
         Textures.draw(g, Textures.DONUT, cx - 16, py + 10, 32, 32, Textures.DONUT_SIZE, Textures.DONUT_SIZE, 0xFFFFFFFF);
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(cx, py + 48);
-        g.getMatrices().scale(2, 2);
+        G.push(g);
+        G.translate(g, cx, py + 48);
+        G.scale(g, 2);
         g.drawCenteredTextWithShadow(textRenderer, "Sprinkle Client", 0, 0, Theme.WHITE);
-        g.getMatrices().popMatrix();
+        G.pop(g);
         g.drawCenteredTextWithShadow(textRenderer, "Made by", cx, py + 72, Theme.MUTED);
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(cx, py + 84);
-        g.getMatrices().scale(1.5f, 1.5f);
+        G.push(g);
+        G.translate(g, cx, py + 84);
+        G.scale(g, 1.5f);
         g.drawCenteredTextWithShadow(textRenderer, "DarkerDawnFR", 0, 0, Theme.GOLD);
-        g.getMatrices().popMatrix();
+        G.pop(g);
 
         int y = py + 106;
         g.drawCenteredTextWithShadow(textRenderer, "Special thanks", cx, y, Theme.DOUGH_LIGHT);

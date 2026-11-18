@@ -1,12 +1,9 @@
 package fr.darkerdawn.sprinkle;
 
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -58,7 +55,7 @@ public final class SkyChanger {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ImageIO.write(out, "png", bytes);
             NativeImage img = NativeImage.read(bytes.toByteArray());
-            c.getTextureManager().registerTexture(SKY, new NativeImageBackedTexture(() -> "sprinkle sky", img));
+            c.getTextureManager().registerTexture(SKY, fr.darkerdawn.sprinkle.compat.Compat.texture("sprinkle sky", img));
             has = true;
             SprinkleClient.LOG.info("Sprinkle sky: {}", file.getFileName());
         } catch (Throwable t) {
@@ -67,12 +64,10 @@ public final class SkyChanger {
     }
 
     /** Runs before entities are drawn: terrain is already there, so the sphere only fills the sky. */
-    public static void render(WorldRenderContext ctx) {
+    public static void render(MatrixStack matrices, VertexConsumerProvider consumers) {
         MinecraftClient c = MinecraftClient.getInstance();
         if (!Config.get().skyChanger || c.world == null || !hasSky()) return;
         if (!c.world.getRegistryKey().equals(World.OVERWORLD)) return;
-        VertexConsumerProvider consumers = ctx.consumers();
-        MatrixStack matrices = ctx.matrices();
         if (consumers == null || matrices == null) return;
 
         // darker at night
@@ -83,7 +78,7 @@ public final class SkyChanger {
         int color = 0xFF000000 | (v << 16) | (v << 8) | v;
 
         float r = Math.max(48, c.options.getClampedViewDistance() * 16 * 0.78f);
-        VertexConsumer vc = consumers.getBuffer(RenderLayers.text(SKY));
+        VertexConsumer vc = consumers.getBuffer(fr.darkerdawn.sprinkle.compat.Hooks.skyLayer(SKY));
         MatrixStack.Entry e = matrices.peek();
         int lon = 48, lat = 24;
         for (int i = 0; i < lat; i++) {

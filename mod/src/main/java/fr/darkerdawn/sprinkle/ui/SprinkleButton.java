@@ -4,10 +4,8 @@ import fr.darkerdawn.sprinkle.Sounds;
 import fr.darkerdawn.sprinkle.Textures;
 import fr.darkerdawn.sprinkle.Theme;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -15,7 +13,7 @@ import net.minecraft.util.Identifier;
 import java.util.function.Consumer;
 
 /** Frosting-blue button with sprinkles on hover. Can show text, an icon, or both. */
-public class SprinkleButton extends ClickableWidget {
+public class SprinkleButton extends fr.darkerdawn.sprinkle.compat.CompatWidget {
     private final Consumer<SprinkleButton> action;
     private Identifier icon;
     private int iconSize = Textures.ICON_SIZE;
@@ -41,7 +39,7 @@ public class SprinkleButton extends ClickableWidget {
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    protected void pressed() {
         action.accept(this);
     }
 

@@ -1,5 +1,6 @@
 package fr.darkerdawn.sprinkle.screen;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.Config;
 import fr.darkerdawn.sprinkle.Join;
 import fr.darkerdawn.sprinkle.Jokes;
@@ -134,8 +135,8 @@ public class SprinkleTitleScreen extends Screen {
         long now = Util.getMeasuringTimeMs();
         boolean shaking = rageQuitAt >= 0;
         if (shaking) {
-            g.getMatrices().pushMatrix();
-            g.getMatrices().translate((RNG.nextFloat() - 0.5f) * 8, (RNG.nextFloat() - 0.5f) * 8);
+            G.push(g);
+            G.translate(g, (RNG.nextFloat() - 0.5f) * 8, (RNG.nextFloat() - 0.5f) * 8);
         }
         super.render(g, mouseX, mouseY, delta);
         drawLogo(g, now);
@@ -148,34 +149,34 @@ public class SprinkleTitleScreen extends Screen {
         g.drawTextWithShadow(textRenderer, fan, width - textRenderer.getWidth(fan) - 28, height - 20, 0xAAB9D6F5);
 
         if (!rain.isEmpty() || now < eggUntil) {
-            g.createNewRootLayer();
+            G.layer(g);
             for (float[] r : rain) {
                 int s = (int) r[4];
-                g.getMatrices().pushMatrix();
-                g.getMatrices().translate(r[0], r[1]);
-                g.getMatrices().rotate(r[3]);
+                G.push(g);
+                G.translate(g, r[0], r[1]);
+                G.rotate(g, r[3]);
                 Textures.draw(g, Textures.DONUT, -s / 2, -s / 2, s, s, Textures.DONUT_SIZE, Textures.DONUT_SIZE, 0xFFFFFFFF);
-                g.getMatrices().popMatrix();
+                G.pop(g);
             }
             if (now < eggUntil) {
-                g.getMatrices().pushMatrix();
-                g.getMatrices().translate(width / 2f, height / 2f - 10);
+                G.push(g);
+                G.translate(g, width / 2f, height / 2f - 10);
                 float pulse = 3f + (float) Math.sin(now / 120.0) * 0.3f;
-                g.getMatrices().scale(pulse, pulse);
+                G.scale(g, pulse);
                 g.drawCenteredTextWithShadow(textRenderer, eggLine, 0, -4, Theme.GOLD);
-                g.getMatrices().popMatrix();
+                G.pop(g);
             }
         }
         if (shaking) {
-            g.getMatrices().popMatrix();
-            g.createNewRootLayer();
+            G.pop(g);
+            G.layer(g);
             float p = Math.min(1, (now - rageQuitAt) / 1800f);
             g.fill(0, 0, width, height, Theme.withAlpha(0x8A0000, p * 0.6f));
-            g.getMatrices().pushMatrix();
-            g.getMatrices().translate(width / 2f, height / 2f);
-            g.getMatrices().scale(4, 4);
+            G.push(g);
+            G.translate(g, width / 2f, height / 2f);
+            G.scale(g, 4);
             g.drawCenteredTextWithShadow(textRenderer, "RAGE QUIT", 0, -4, Theme.RED);
-            g.getMatrices().popMatrix();
+            G.pop(g);
         }
     }
 
@@ -196,32 +197,32 @@ public class SprinkleTitleScreen extends Screen {
         int total = size + 8 + textW;
         int x = width / 2 - total / 2;
         int y = logoY + (logoH - size) / 2;
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(x + size / 2f, y + size / 2f + bob);
-        g.getMatrices().rotate((float) Math.sin(now / 1400.0) * 0.12f);
+        G.push(g);
+        G.translate(g, x + size / 2f, y + size / 2f + bob);
+        G.rotate(g, (float) Math.sin(now / 1400.0) * 0.12f);
         Textures.draw(g, Textures.DONUT, -size / 2, -size / 2, size, size, Textures.DONUT_SIZE, Textures.DONUT_SIZE, 0xFFFFFFFF);
-        g.getMatrices().popMatrix();
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(x + size + 8, y + size / 2f - 4 * scale + bob);
-        g.getMatrices().scale(scale, scale);
+        G.pop(g);
+        G.push(g);
+        G.translate(g, x + size + 8, y + size / 2f - 4 * scale + bob);
+        G.scale(g, scale);
         g.drawText(textRenderer, word, 1, 1, Theme.OUTLINE, false);
         g.drawText(textRenderer, word, 0, 0, Theme.WHITE, false);
-        g.getMatrices().popMatrix();
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(x + size + 8 + textW / 2f, y + size / 2f + 4 * scale + 4 + bob);
+        G.pop(g);
+        G.push(g);
+        G.translate(g, x + size + 8 + textW / 2f, y + size / 2f + 4 * scale + 4 + bob);
         g.drawCenteredTextWithShadow(textRenderer, "SPRINKLE CLIENT", 0, 0, Theme.DOUGH_LIGHT);
-        g.getMatrices().popMatrix();
+        G.pop(g);
     }
 
     private void drawSplash(DrawContext g, long now) {
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(width / 2f + 115, logoY + logoH - 8);
-        g.getMatrices().rotate((float) Math.toRadians(-20));
+        G.push(g);
+        G.translate(g, width / 2f + 115, logoY + logoH - 8);
+        G.rotate(g, (float) Math.toRadians(-20));
         float s = 1.8f - Math.abs((float) Math.sin((now % 1000L) / 1000f * Math.PI * 2) * 0.1f);
         s = s * 100f / (textRenderer.getWidth(splash) + 32);
-        g.getMatrices().scale(s, s);
+        G.scale(g, s);
         g.drawCenteredTextWithShadow(textRenderer, splash, 0, -8, 0xFFFFFF00);
-        g.getMatrices().popMatrix();
+        G.pop(g);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package fr.darkerdawn.sprinkle.feature;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.Config;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
@@ -33,8 +34,7 @@ public final class Tooltips {
     public record MapData(MapIdComponent id) implements TooltipData {}
 
     public static boolean shiftDown() {
-        var w = MinecraftClient.getInstance().getWindow();
-        return InputUtil.isKeyPressed(w, GLFW.GLFW_KEY_LEFT_SHIFT) || InputUtil.isKeyPressed(w, GLFW.GLFW_KEY_RIGHT_SHIFT);
+        return fr.darkerdawn.sprinkle.compat.Compat.keyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || fr.darkerdawn.sprinkle.compat.Compat.keyDown(GLFW.GLFW_KEY_RIGHT_SHIFT);
     }
 
     public static boolean isShulker(ItemStack stack) {
@@ -134,11 +134,11 @@ public final class Tooltips {
             MapRenderState rs = new MapRenderState();
             c.getMapRenderer().update(id, state, rs);
             g.fill(x - 1, y - 1, x + SIZE + 1, y + SIZE + 1, 0xFF020B35);
-            g.getMatrices().pushMatrix();
-            g.getMatrices().translate(x, y);
-            g.getMatrices().scale(SIZE / 128f, SIZE / 128f);
+            G.push(g);
+            G.translate(g, x, y);
+            G.scale(g, SIZE / 128f);
             g.drawMap(rs);
-            g.getMatrices().popMatrix();
+            G.pop(g);
         }
     }
 }

@@ -1,5 +1,6 @@
 package fr.darkerdawn.sprinkle.screen;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.Join;
 import fr.darkerdawn.sprinkle.Jokes;
 import fr.darkerdawn.sprinkle.Textures;
@@ -57,11 +58,11 @@ public class JoinLoadingScreen extends Screen {
         int cx = width / 2, cy = height / 2 - 20;
 
         int size = 64;
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(cx, cy - 30);
-        g.getMatrices().rotate(t / 250f);
+        G.push(g);
+        G.translate(g, cx, cy - 30);
+        G.rotate(g, t / 250f);
         Textures.draw(g, Textures.DONUT, -size / 2, -size / 2, size, size, Textures.DONUT_SIZE, Textures.DONUT_SIZE, 0xFFFFFFFF);
-        g.getMatrices().popMatrix();
+        G.pop(g);
 
         String line = lines[Math.min(lines.length - 1, (int) (p * lines.length))];
         g.drawCenteredTextWithShadow(textRenderer, line, cx, cy + 12, Theme.WHITE);

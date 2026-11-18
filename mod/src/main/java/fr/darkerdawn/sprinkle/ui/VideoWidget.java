@@ -1,20 +1,18 @@
 package fr.darkerdawn.sprinkle.ui;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.MenuVideo;
 import fr.darkerdawn.sprinkle.Theme;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 /** The looping video where the button next to Rage Quit used to be. Hover to see it bigger. */
-public class VideoWidget extends ClickableWidget {
+public class VideoWidget extends fr.darkerdawn.sprinkle.compat.CompatWidget {
     private final long start = Util.getMeasuringTimeMs();
     private boolean pinned;
 
@@ -23,7 +21,7 @@ public class VideoWidget extends ClickableWidget {
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    protected void pressed() {
         pinned = !pinned;
     }
 
@@ -47,7 +45,7 @@ public class VideoWidget extends ClickableWidget {
             int bw = 96, bh = Math.round(bw * MenuVideo.height() / (float) Math.max(1, MenuVideo.width()));
             bh = Math.min(bh, 200);
             int bx = x + w / 2 - bw / 2, by = Math.max(2, y - bh - 4);
-            g.createNewRootLayer();
+            G.layer(g);
             g.fill(bx - 2, by - 2, bx + bw + 2, by + bh + 2, Theme.OUTLINE);
             g.fill(bx - 1, by - 1, bx + bw + 1, by + bh + 1, Theme.FROSTING);
             cover(g, frame, bx, by, bw, bh);
@@ -60,7 +58,7 @@ public class VideoWidget extends ClickableWidget {
         float scale = Math.max(bw / (float) tw, bh / (float) th);
         int rw = Math.max(1, Math.round(bw / scale)), rh = Math.max(1, Math.round(bh / scale));
         int u = Math.max(0, (tw - rw) / 2), v = Math.max(0, (th - rh) / 2);
-        g.drawTexture(RenderPipelines.GUI_TEXTURED, id, x, y, u, v, bw, bh, rw, rh, tw, th, 0xFFFFFFFF);
+        G.tex(g, id, x, y, u, v, bw, bh, rw, rh, tw, th, 0xFFFFFFFF);
     }
 
     @Override

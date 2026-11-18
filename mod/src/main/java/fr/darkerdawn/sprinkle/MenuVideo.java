@@ -2,7 +2,6 @@ package fr.darkerdawn.sprinkle;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import org.jcodec.api.FrameGrab;
 import org.jcodec.common.io.NIOUtils;
@@ -147,11 +146,11 @@ public final class MenuVideo {
             try {
                 NativeImage ni = new NativeImage(img.getWidth(), img.getHeight(), false);
                 for (int y = 0; y < img.getHeight(); y++) {
-                    for (int x = 0; x < img.getWidth(); x++) ni.setColorArgb(x, y, img.getRGB(x, y) | 0xFF000000);
+                    for (int x = 0; x < img.getWidth(); x++) fr.darkerdawn.sprinkle.compat.Compat.setPixel(ni, x, y, img.getRGB(x, y) | 0xFF000000);
                 }
                 Identifier id = Sounds.id("dynamic/menu_video_" + frames.size());
                 String name = "sprinkle menu video " + frames.size();
-                c.getTextureManager().registerTexture(id, new NativeImageBackedTexture(() -> name, ni));
+                c.getTextureManager().registerTexture(id, fr.darkerdawn.sprinkle.compat.Compat.texture(name, ni));
                 frames.add(id);
                 w = img.getWidth();
                 h = img.getHeight();

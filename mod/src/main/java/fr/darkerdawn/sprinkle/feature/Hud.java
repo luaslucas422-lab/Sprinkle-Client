@@ -1,12 +1,12 @@
 package fr.darkerdawn.sprinkle.feature;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.Config;
 import fr.darkerdawn.sprinkle.Textures;
 import fr.darkerdawn.sprinkle.Theme;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -19,7 +19,7 @@ public final class Hud {
 
     private static final EquipmentSlot[] ARMOR = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
-    public static void render(DrawContext g, RenderTickCounter tick) {
+    public static void render(DrawContext g) {
         MinecraftClient c = MinecraftClient.getInstance();
         if (c.player == null || c.options.hudHidden) return;
         Config cfg = Config.get();
@@ -107,12 +107,12 @@ public final class Hud {
                 g.fill(x, y, x + 3, y + 2, Theme.withAlpha(col, alpha));
             }
         }
-        g.getMatrices().pushMatrix();
-        g.getMatrices().translate(w / 2f, h / 3f);
+        G.push(g);
+        G.translate(g, w / 2f, h / 3f);
         float s = 3.5f + (float) Math.sin(now / 90.0) * 0.25f;
-        g.getMatrices().scale(s, s);
+        G.scale(g, s);
         g.drawCenteredTextWithShadow(tr, Tracker.flexTitle, 0, -4, Theme.withAlpha(Theme.GOLD, alpha));
-        g.getMatrices().popMatrix();
+        G.pop(g);
         g.drawCenteredTextWithShadow(tr, "You have " + Money.format(Tracker.money) + ". Flex responsibly.", w / 2, (int) (h / 3f) + 18, Theme.withAlpha(0xFFFFFF, alpha));
     }
 }

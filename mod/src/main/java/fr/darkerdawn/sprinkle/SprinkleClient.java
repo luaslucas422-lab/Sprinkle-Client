@@ -1,9 +1,7 @@
 package fr.darkerdawn.sprinkle;
 
 import fr.darkerdawn.sprinkle.feature.AuctionPrices;
-import fr.darkerdawn.sprinkle.feature.FakeScoreboard;
 import fr.darkerdawn.sprinkle.feature.Features;
-import fr.darkerdawn.sprinkle.feature.Hud;
 import fr.darkerdawn.sprinkle.feature.SpawnerCalc;
 import fr.darkerdawn.sprinkle.feature.Tooltips;
 import fr.darkerdawn.sprinkle.feature.Tracker;
@@ -16,12 +14,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
@@ -43,11 +36,7 @@ public class SprinkleClient implements ClientModInitializer {
         Config.load();
         Features.registerKeys();
 
-        HudElementRegistry.addLast(Sounds.id("donut_mods"), Hud::render);
-        HudElementRegistry.replaceElement(VanillaHudElements.SCOREBOARD, vanilla -> (g, tick) -> {
-            if (Config.get().fakeScoreboard) FakeScoreboard.render(g);
-            else vanilla.render(g, tick);
-        });
+        fr.darkerdawn.sprinkle.compat.Hooks.register();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             Tracker.tick(client);
@@ -67,7 +56,7 @@ public class SprinkleClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> Tracker.reset());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> Tracker.reset());
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
-            if (world.isClient() && entity instanceof PlayerEntity) Tracker.tag();
+            if (fr.darkerdawn.sprinkle.compat.Compat.isClient(world) && entity instanceof PlayerEntity) Tracker.tag();
             return ActionResult.PASS;
         });
         ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
@@ -75,14 +64,13 @@ public class SprinkleClient implements ClientModInitializer {
             Tooltips.hint(stack, lines);
             AuctionPrices.tooltip(stack, lines);
         });
-        WorldRenderEvents.BEFORE_ENTITIES.register(SkyChanger::render);
         PauseMenu.register();
 
         ModContainer me = FabricLoader.getInstance().getModContainer("sprinkleclient").orElseThrow();
-        ResourceLoader.registerBuiltinPack(Sounds.id("donut_smp"), me, Text.literal("Donut SMP"), PackActivationType.DEFAULT_ENABLED);
-        ResourceLoader.registerBuiltinPack(Sounds.id("donut_stone"), me, Text.literal("Donut Stone"), PackActivationType.DEFAULT_ENABLED);
-        ResourceLoader.registerBuiltinPack(Sounds.id("donut_voicechat"), me, Text.literal("Donut Voice Chat"), PackActivationType.DEFAULT_ENABLED);
-        ResourceLoader.registerBuiltinPack(Sounds.id("sprinkle_blue"), me, Text.literal("Sprinkle Blue Buttons"), PackActivationType.DEFAULT_ENABLED);
+        fr.darkerdawn.sprinkle.compat.Compat.registerPack(me, "donut_smp", "Donut SMP");
+        fr.darkerdawn.sprinkle.compat.Compat.registerPack(me, "donut_stone", "Donut Stone");
+        fr.darkerdawn.sprinkle.compat.Compat.registerPack(me, "donut_voicechat", "Donut Voice Chat");
+        fr.darkerdawn.sprinkle.compat.Compat.registerPack(me, "sprinkle_blue", "Sprinkle Blue Buttons");
         LOG.info("Sprinkle Client {} ready. Every button leads to Donut SMP.", VERSION);
     }
 

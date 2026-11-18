@@ -1,11 +1,11 @@
 package fr.darkerdawn.sprinkle;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import fr.darkerdawn.sprinkle.feature.Tracker;
 import fr.darkerdawn.sprinkle.screen.ModsScreen;
 import fr.darkerdawn.sprinkle.screen.SettingsScreen;
 import fr.darkerdawn.sprinkle.ui.SprinkleButton;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DeathScreen;
@@ -55,11 +55,11 @@ public final class PauseMenu {
             if (System.currentTimeMillis() < rageBannerUntil) {
                 ScreenEvents.afterRender(screen).register((s, g, mx, my, d) -> {
                     if (System.currentTimeMillis() > rageBannerUntil) return;
-                    g.getMatrices().pushMatrix();
-                    g.getMatrices().translate(w / 2f, 18);
-                    g.getMatrices().scale(2.5f, 2.5f);
+                    G.push(g);
+                    G.translate(g, w / 2f, 18);
+                    G.scale(g, 2.5f);
                     g.drawCenteredTextWithShadow(client.textRenderer, "RAGE QUIT!", 0, 0, Theme.RED);
-                    g.getMatrices().popMatrix();
+                    G.pop(g);
                 });
             }
         });
@@ -67,7 +67,7 @@ public final class PauseMenu {
 
     /** Mod Menu, Donut style: sky, sprinkles and the donut logo. */
     private static void themeModMenu(MinecraftClient client, Screen screen, int w, int h) {
-        ScreenEvents.afterBackground(screen).register((s, g, mx, my, d) -> {
+        fr.darkerdawn.sprinkle.compat.Compat.afterBackground(screen, g -> {
             g.fillGradient(0, 0, w, h, 0xCC2EA1FC, 0xEE0B5CC2);
             Theme.sprinkles(g, 0, 0, w, h, 21, 90);
         });
@@ -79,7 +79,7 @@ public final class PauseMenu {
 
     /** Simple Voice Chat, Donut style, plus the Donut SMP Soundboard button on its main window. */
     private static void themeVoiceChat(MinecraftClient client, Screen screen, int w, int h, boolean main) {
-        ScreenEvents.afterBackground(screen).register((s, g, mx, my, d) -> Theme.sprinkles(g, 0, 0, w, h, 33, 60));
+        fr.darkerdawn.sprinkle.compat.Compat.afterBackground(screen, g -> Theme.sprinkles(g, 0, 0, w, h, 33, 60));
         if (main) {
             int panelBottom = (h - 76) / 2 + 76;
             Screens.getButtons(screen).add(new SprinkleButton(w / 2 - 97, panelBottom + 4, 195, 20, Text.literal("Donut SMP Soundboard"),
@@ -101,10 +101,10 @@ public final class PauseMenu {
         }
         ClickableWidget rageButton = rage;
         String joke = Jokes.pick(Jokes.SPLASHES);
-        ScreenMouseEvents.beforeMouseClick(screen).register((s, click) -> {
+        fr.darkerdawn.sprinkle.compat.Compat.beforeClick(screen, () -> {
             if (rageButton != null && rageButton.isHovered()) rageArmed = true;
         });
-        ScreenEvents.afterBackground(screen).register((s, g, mx, my, d) -> {
+        fr.darkerdawn.sprinkle.compat.Compat.afterBackground(screen, g -> {
             g.fillGradient(0, 0, w, h, 0x660370FF, 0x99020B35);
             Theme.sprinkles(g, 0, 0, w, 30, 7, 30);
             Theme.sprinkles(g, 0, h - 30, w, 28, 11, 30);

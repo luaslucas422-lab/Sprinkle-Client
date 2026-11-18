@@ -43,7 +43,6 @@ public final class Features {
     }
 
     public static final List<Feature> ALL = new ArrayList<>();
-    public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Sounds.id("sprinkle"));
     public static KeyBinding openMenu, editScoreboard, setBase, soundboard;
 
     static {
@@ -74,12 +73,12 @@ public final class Features {
     }
 
     public static void registerKeys() {
-        openMenu = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.menu", GLFW.GLFW_KEY_RIGHT_SHIFT, CATEGORY));
-        editScoreboard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.edit_scoreboard", InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
-        soundboard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.soundboard", InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
-        setBase = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.set_base", InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
+        openMenu = KeyBindingHelper.registerKeyBinding(fr.darkerdawn.sprinkle.compat.Compat.key("key.sprinkleclient.menu", GLFW.GLFW_KEY_RIGHT_SHIFT));
+        editScoreboard = KeyBindingHelper.registerKeyBinding(fr.darkerdawn.sprinkle.compat.Compat.key("key.sprinkleclient.edit_scoreboard", InputUtil.UNKNOWN_KEY.getCode()));
+        soundboard = KeyBindingHelper.registerKeyBinding(fr.darkerdawn.sprinkle.compat.Compat.key("key.sprinkleclient.soundboard", InputUtil.UNKNOWN_KEY.getCode()));
+        setBase = KeyBindingHelper.registerKeyBinding(fr.darkerdawn.sprinkle.compat.Compat.key("key.sprinkleclient.set_base", InputUtil.UNKNOWN_KEY.getCode()));
         for (Feature f : ALL) {
-            f.key = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.toggle." + f.id, InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
+            f.key = KeyBindingHelper.registerKeyBinding(fr.darkerdawn.sprinkle.compat.Compat.key("key.sprinkleclient.toggle." + f.id, InputUtil.UNKNOWN_KEY.getCode()));
         }
     }
 

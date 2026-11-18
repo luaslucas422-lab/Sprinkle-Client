@@ -1,11 +1,10 @@
 package fr.darkerdawn.sprinkle;
 
+import fr.darkerdawn.sprinkle.compat.G;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 
 import javax.imageio.ImageIO;
@@ -102,7 +101,7 @@ public final class Textures {
             NativeImage image = NativeImage.read(bytes.toByteArray());
             Identifier id = Sounds.id("dynamic/img_" + (counter++));
             String name = "sprinkle " + file.getFileName();
-            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(() -> name, image));
+            MinecraftClient.getInstance().getTextureManager().registerTexture(id, fr.darkerdawn.sprinkle.compat.Compat.texture(name, image));
             return new Img(id, w, h);
         } catch (Throwable t) {
             SprinkleClient.LOG.warn("Sprinkle could not load image {}: {}", file, t.toString());
@@ -127,11 +126,11 @@ public final class Textures {
         int regionH = Math.max(1, Math.round(bh / scale));
         int u = Math.max(0, Math.min(img.w() - regionW, Math.round((img.w() - regionW) * panX)));
         int v = Math.max(0, (img.h() - regionH) / 2);
-        g.drawTexture(RenderPipelines.GUI_TEXTURED, img.id(), 0, 0, u, v, bw, bh, regionW, regionH, img.w(), img.h(), color);
+        G.tex(g, img.id(), 0, 0, u, v, bw, bh, regionW, regionH, img.w(), img.h(), color);
     }
 
     /** Draws a whole image scaled into a box. */
     public static void draw(DrawContext g, Identifier id, int x, int y, int w, int h, int texW, int texH, int color) {
-        g.drawTexture(RenderPipelines.GUI_TEXTURED, id, x, y, 0, 0, w, h, texW, texH, texW, texH, color);
+        G.tex(g, id, x, y, 0, 0, w, h, texW, texH, texW, texH, color);
     }
 }

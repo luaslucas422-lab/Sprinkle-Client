@@ -1,14 +1,12 @@
 package fr.darkerdawn.sprinkle.ui;
 
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.Text;
 
 /** An invisible clickable area (used for the logo easter egg). */
-public class Hotspot extends ClickableWidget {
+public class Hotspot extends fr.darkerdawn.sprinkle.compat.CompatWidget {
     private final Runnable action;
 
     public Hotspot(int x, int y, int w, int h, Runnable action) {
@@ -17,7 +15,7 @@ public class Hotspot extends ClickableWidget {
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    protected void pressed() {
         action.run();
     }
 
