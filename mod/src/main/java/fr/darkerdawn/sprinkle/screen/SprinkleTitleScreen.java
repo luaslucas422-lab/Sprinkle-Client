@@ -53,12 +53,7 @@ public class SprinkleTitleScreen extends Screen {
         addDrawableChild(new SprinkleButton(cx - 100, y + 24, 200, 20, donut, b -> Join.press(this)));
         addDrawableChild(new SprinkleButton(cx - 100, y + 48, 200, 20, donut, b -> Join.press(this)));
         int row = y + 72 + 12;
-        if (Config.get().menuVideo && fr.darkerdawn.sprinkle.MenuVideo.hasVideoFile()) {
-            fr.darkerdawn.sprinkle.MenuVideo.ensureStarted();
-            addDrawableChild(new fr.darkerdawn.sprinkle.ui.VideoWidget(cx - 100, row, 98, 20));
-        } else {
-            addDrawableChild(new SprinkleButton(cx - 100, row, 98, 20, donut, b -> Join.press(this)));
-        }
+        addDrawableChild(new SprinkleButton(cx - 100, row, 98, 20, Text.literal("Real Video"), b -> client.setScreen(new VideoScreen(this))));
         addDrawableChild(new SprinkleButton(cx + 2, row, 98, 20, Text.literal("Rage Quit"), b -> rageQuit()).silent());
         // where the language button was: credits; where accessibility was: Discord
         addDrawableChild(new SprinkleButton(cx - 124, row, 20, 20, Text.empty(), b -> client.setScreen(new CreditsScreen(this)))

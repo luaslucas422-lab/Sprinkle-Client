@@ -200,7 +200,6 @@ final class Smoke {
         switch (titleTicks) {
             case 160 -> {
                 check("title screen is the Donut menu", c.currentScreen instanceof SprinkleTitleScreen);
-                check("menu video has frames", MenuVideo.ready());
                 shot(c, "main menu");
             }
             case 162 -> c.setScreen(new CreditsScreen(c.currentScreen));
@@ -223,7 +222,9 @@ final class Smoke {
                 c.setScreen(new JoinLoadingScreen(new SprinkleTitleScreen()));
             }
             case 314 -> shot(c, "join loading screen");
-            case 316 -> {
+            case 316 -> c.setScreen(new fr.darkerdawn.sprinkle.screen.VideoScreen(new SprinkleTitleScreen()));
+            case 345 -> { check("real video has frames", MenuVideo.ready()); shot(c, "real video"); }
+            case 347 -> {
                 c.setScreen(new SprinkleTitleScreen());
                 check("config file saved", Files.exists(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("sprinkleclient.json")));
                 System.out.println("[SPRINKLE-SMOKE] done, failures=" + fails);

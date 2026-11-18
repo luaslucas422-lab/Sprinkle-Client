@@ -42,7 +42,7 @@ Each has an on/off switch and its own keybind (Options → Controls → Sprinkle
 | Soundboard | Donut SMP Soundboard (pay ding, kill, ka-ching, air horn, boom, sad trombone, meow, drumroll...). With Simple Voice Chat it plays into your voice too |
 
 ## Main menu video
-Put an `.mp4` or `.gif` in `config/sprinkleclient/menu_video/` (or pick one in the installer) and it loops where the button next to Rage Quit was. Hover it to see it bigger. It stops when you leave the menu.
+The **Real Video** button (next to Rage Quit) plays your video full screen on a loop; the tiny X in the top-left closes it. Pick the video in the installer (or put an `.mp4`/`.gif` in `config/sprinkleclient/menu_video/`).
 
 ## Mod Menu and Simple Voice Chat
 Both come pre-installed and are themed Donut SMP style: blue sky, sprinkles and the donut logo in Mod Menu; donut icons, a frosting window and a **Donut SMP Soundboard** button in Simple Voice Chat.
