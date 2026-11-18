@@ -8,6 +8,10 @@ on:
   workflow_dispatch: {}
 jobs:
   smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ['1.21.11', '1.21.9', '1.21.8', '1.21.1', '1.21']
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -16,16 +20,18 @@ jobs:
         with: { distribution: temurin, java-version: 25 }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '9.8.2' }
-      - name: Pick the newest Yarn mappings for 1.21.11
+      - name: Pick Yarn + Fabric API for ${{ matrix.mc }}
         run: |
-          Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/1.21.11 | jq -r '.[0].version')
-          echo "yarn: $Y"
-          [ -n "$Y" ] && [ "$Y" != null ] && sed -i "s/^yarn_mappings=.*/yarn_mappings=$Y/" mod/gradle.properties
-          grep yarn mod/gradle.properties | tee yarn.log
+          MC=${{ matrix.mc }}
+          Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/$MC | jq -r '.[0].version')
+          F=$(curl -s "https://api.modrinth.com/v2/project/fabric-api/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%22$MC%22%5D" | jq -r '.[0].version_number')
+          echo "yarn_$MC=$Y" >> mod/gradle.properties
+          echo "fabric_$MC=$F" >> mod/gradle.properties
+          echo "mc=$MC" >> mod/gradle.properties
       - name: Pick Mod Menu + Simple Voice Chat builds for the in-game test
         run: |
           for p in modmenu simple-voice-chat; do
-            V=$(curl -s "https://api.modrinth.com/v2/project/$p/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%221.21.11%22%5D" | jq -r '.[0].id')
+            V=$(curl -s "https://api.modrinth.com/v2/project/$p/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%22${{ matrix.mc }}%22%5D" | jq -r '.[0].id')
             echo "$p: $V"
             KEY=$(echo $p | tr '-' '_')_test
             [ -n "$V" ] && [ "$V" != null ] && echo "$KEY=$V" >> mod/gradle.properties
@@ -72,7 +78,7 @@ jobs:
           grep -q "SPRINKLE-SMOKE\] done, failures=0" client.out run/logs/latest.log
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: screenshots, path: shots/* }
+        with: { name: "screenshots-${{ matrix.mc }}", path: shots/* }
       - name: Save results for review (branch ci-smoke)
         if: always()
         run: |
@@ -81,4 +87,4 @@ jobs:
           cd shots && for f in *.png; do [ -f "$f" ] && convert "$f" -resize 960x -quality 80 "${f%.png}.jpg" && rm "$f"; done; true
           echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
           git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "smoke ${{ github.run_id }}"
-          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-smoke
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-smoke-${{ matrix.mc }}
