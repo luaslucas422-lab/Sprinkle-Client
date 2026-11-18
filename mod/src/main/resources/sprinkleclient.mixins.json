@@ -6,7 +6,8 @@
     "MinecraftClientMixin",
     "ChatHudMixin",
     "DebugHudMixin",
-    "ClientPlayNetworkHandlerMixin"
+    "ClientPlayNetworkHandlerMixin",
+    "ItemStackMixin"
   ],
   "injectors": { "defaultRequire": 0 }
 }

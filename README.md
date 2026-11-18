@@ -35,6 +35,9 @@ Each has an on/off switch and its own keybind (Options → Controls → Sprinkle
 | Base Alarm | Pings when a player is near your base. **Off by default**: Donut SMP may treat it as a radar |
 | Rich Flex | Big celebration when you hit $1M, $1B... |
 | Sky Changer | Put a .png/.jpg in `config/sprinkleclient/sky/` and it becomes the sky |
+| Auction Prices | "Auction: $X" under an item's tooltip: the cheapest listing on the Donut SMP auction house (official DonutSMP API). Type `/api` on Donut SMP once and Sprinkle grabs your key (or paste it in Settings → Links) |
+| Shulker Preview | Hold **Shift** over a shulker box to see what's inside (bundles show theirs already) |
+| Map Preview | Hover over a map to see it |
 
 ## Resource packs (on by default)
 - **Donut SMP** – cursed: pigs are frosted donut-pigs that meow, cows and chickens meow too, sheep go ka-ching, the sun and moon are donuts.

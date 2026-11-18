@@ -56,6 +56,9 @@ public final class Features {
         add("spawner_calc", "Spawner Calculator", "Shows what spawners in your inventory are worth", () -> c.spawnerCalc, v -> c.spawnerCalc = v);
         add("base_alarm", "Base Alarm", "Pings you when a player is near your base (may be seen as a radar!)", () -> c.baseAlarm, v -> c.baseAlarm = v);
         add("rich_flex", "Rich Flex", "Big celebration when you hit a money milestone", () -> c.richFlex, v -> c.richFlex = v);
+        add("auction_prices", "Auction Prices", "Shows what an item goes for on the auction house", () -> c.auctionPrices, v -> c.auctionPrices = v);
+        add("shulker_preview", "Shulker Preview", "Hold Shift over a shulker box to see what's inside", () -> c.shulkerTooltip, v -> c.shulkerTooltip = v);
+        add("map_preview", "Map Preview", "Hover over a map to see it", () -> c.mapTooltip, v -> c.mapTooltip = v);
         add("sky_changer", "Sky Changer", "Uses your own picture as the sky", () -> c.skyChanger, v -> c.skyChanger = v);
     }
 

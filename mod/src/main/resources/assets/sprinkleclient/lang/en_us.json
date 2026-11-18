@@ -11,5 +11,8 @@
   "key.sprinkleclient.toggle.spawner_calc": "Toggle Spawner Calculator",
   "key.sprinkleclient.toggle.base_alarm": "Toggle Base Alarm",
   "key.sprinkleclient.toggle.rich_flex": "Toggle Rich Flex",
-  "key.sprinkleclient.toggle.sky_changer": "Toggle Sky Changer"
+  "key.sprinkleclient.toggle.sky_changer": "Toggle Sky Changer",
+  "key.sprinkleclient.toggle.auction_prices": "Toggle Auction Prices",
+  "key.sprinkleclient.toggle.shulker_preview": "Toggle Shulker Preview",
+  "key.sprinkleclient.toggle.map_preview": "Toggle Map Preview"
 }

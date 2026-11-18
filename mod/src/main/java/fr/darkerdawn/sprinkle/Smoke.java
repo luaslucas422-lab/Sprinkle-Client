@@ -81,7 +81,7 @@ final class Smoke {
             case 20 -> {
                 check("Donut SMP pack enabled", c.getResourcePackManager().getEnabledIds().stream().anyMatch(id -> id.contains("donut_smp")));
                 check("Blue buttons pack enabled", c.getResourcePackManager().getEnabledIds().stream().anyMatch(id -> id.contains("sprinkle_blue")));
-                check("all Donut mods registered", Features.ALL.size() == 9);
+                check("all Donut mods registered", Features.ALL.size() == 12);
                 check("money parser", Money.parse("Money $1.5M") == 1_500_000);
                 makeTestSky();
                 SkyChanger.reload();
@@ -131,8 +131,10 @@ final class Smoke {
             case 150 -> shot(c, "old style scoreboard");
             case 152 -> c.setScreen(new GameMenuScreen(true));
             case 170 -> shot(c, "pause menu");
-            case 172 -> { c.setScreen(null); Tracker.flexTitle = Money.milestoneTitle(1e6); Tracker.flexUntil = System.currentTimeMillis() + 4000; }
-            case 185 -> shot(c, "rich flex");
+            case 171 -> c.setScreen(new TooltipTest());
+            case 178 -> shot(c, "shulker preview tooltip");
+            case 179 -> { c.setScreen(null); Tracker.flexTitle = Money.milestoneTitle(1e6); Tracker.flexUntil = System.currentTimeMillis() + 4000; }
+            case 186 -> shot(c, "rich flex");
             case 190 -> {
                 cfg.fakeScoreboard = false;
                 cfg.fakeOldStyle = false;
@@ -147,6 +149,23 @@ final class Smoke {
                 titleTicks = 0;
             }
             default -> { }
+        }
+    }
+
+    /** Draws the Shulker Preview tooltip in the middle of the screen. */
+    static final class TooltipTest extends net.minecraft.client.gui.screen.Screen {
+        TooltipTest() { super(net.minecraft.text.Text.literal("tooltip test")); }
+
+        @Override
+        public void render(net.minecraft.client.gui.DrawContext g, int mx, int my, float d) {
+            super.render(g, mx, my, d);
+            var items = net.minecraft.util.collection.DefaultedList.ofSize(27, ItemStack.EMPTY);
+            items.set(0, new ItemStack(Items.DIAMOND, 64));
+            items.set(4, new ItemStack(Items.TOTEM_OF_UNDYING));
+            items.set(13, new ItemStack(Items.SPAWNER, 8));
+            items.set(26, new ItemStack(Items.NETHERITE_SWORD));
+            g.drawTooltip(textRenderer, java.util.List.of(net.minecraft.text.Text.literal("Shulker Box"), net.minecraft.text.Text.literal("§6Auction: §f$1.2M §8lowest")),
+                    java.util.Optional.of(new fr.darkerdawn.sprinkle.feature.Tooltips.ShulkerData(items)), width / 2 - 90, height / 2 - 40);
         }
     }
 

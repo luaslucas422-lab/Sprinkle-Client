@@ -45,6 +45,10 @@ public final class Config {
     public boolean showDeathWaypoint = true;
     public boolean skyChanger = true; // only does something once a picture is in the sky folder
     public boolean fakeScoreboard = false;
+    public boolean auctionPrices = true;
+    public boolean shulkerTooltip = true;
+    public boolean mapTooltip = true;
+    public String donutApiKey = "";
     public boolean fakeOldStyle = false;
     public FakeBoard fake = new FakeBoard();
     public int combatTagSeconds = 15;

@@ -1,9 +1,11 @@
 package fr.darkerdawn.sprinkle;
 
+import fr.darkerdawn.sprinkle.feature.AuctionPrices;
 import fr.darkerdawn.sprinkle.feature.FakeScoreboard;
 import fr.darkerdawn.sprinkle.feature.Features;
 import fr.darkerdawn.sprinkle.feature.Hud;
 import fr.darkerdawn.sprinkle.feature.SpawnerCalc;
+import fr.darkerdawn.sprinkle.feature.Tooltips;
 import fr.darkerdawn.sprinkle.feature.Tracker;
 import fr.darkerdawn.sprinkle.screen.ModsScreen;
 import fr.darkerdawn.sprinkle.screen.ScoreboardEditorScreen;
@@ -11,7 +13,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
@@ -56,13 +60,20 @@ public class SprinkleClient implements ClientModInitializer {
             if (Smoke.ON) Smoke.tick(client);
         });
         ClientReceiveMessageEvents.GAME.register(Tracker::onGameMessage);
+        ClientReceiveMessageEvents.GAME.register(AuctionPrices::onGameMessage);
+        ClientSendMessageEvents.COMMAND.register(AuctionPrices::onCommand);
+        TooltipComponentCallback.EVENT.register(Tooltips::component);
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> Tracker.reset());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> Tracker.reset());
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
             if (world.isClient && entity instanceof PlayerEntity) Tracker.tag();
             return ActionResult.PASS;
         });
-        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> SpawnerCalc.tooltip(stack, lines));
+        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+            SpawnerCalc.tooltip(stack, lines);
+            Tooltips.hint(stack, lines);
+            AuctionPrices.tooltip(stack, lines);
+        });
         WorldRenderEvents.BEFORE_ENTITIES.register(SkyChanger::render);
         PauseMenu.register();
 

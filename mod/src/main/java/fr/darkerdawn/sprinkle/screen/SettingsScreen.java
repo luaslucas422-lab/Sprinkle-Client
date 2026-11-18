@@ -29,7 +29,7 @@ public class SettingsScreen extends SprinkleScreen {
 
     @Override
     protected void init() {
-        layoutPanel(340, 250);
+        layoutPanel(340, 270);
         labels.clear();
         hint = "";
         Config c = Config.get();
@@ -106,6 +106,13 @@ public class SettingsScreen extends SprinkleScreen {
                 dc.setChangedListener(s -> { if (s.startsWith("http")) { c.discordUrl = s.trim(); Config.save(); } });
                 addDrawableChild(dc);
                 labels.add(new Object[]{left, y + 5, "Discord link"});
+                y += 22;
+                TextFieldWidget key = new TextFieldWidget(textRenderer, right, y, cw, 18, Text.literal("DonutSMP API key"));
+                key.setMaxLength(200);
+                key.setText(c.donutApiKey == null ? "" : c.donutApiKey);
+                key.setChangedListener(s -> { c.donutApiKey = s.trim(); Config.save(); });
+                addDrawableChild(key);
+                labels.add(new Object[]{left, y + 5, "API key (/api)"});
                 y += 26;
                 button(left, y, cw, "Backgrounds folder", b -> open(Textures.backgroundsDir()));
                 button(right, y, cw, "Sky folder", b -> open(SkyChanger.dir()));
