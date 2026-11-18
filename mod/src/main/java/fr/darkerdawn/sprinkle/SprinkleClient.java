@@ -66,7 +66,7 @@ public class SprinkleClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> Tracker.reset());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> Tracker.reset());
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
-            if (world.isClient && entity instanceof PlayerEntity) Tracker.tag();
+            if (world.isClient() && entity instanceof PlayerEntity) Tracker.tag();
             return ActionResult.PASS;
         });
         ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {

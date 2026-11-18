@@ -107,7 +107,7 @@ final class Smoke {
                         p.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
                         p.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.NETHERITE_CHESTPLATE));
                         p.getInventory().setStack(0, new ItemStack(Items.SPAWNER, 12));
-                        ServerWorld w = p.getServerWorld();
+                        ServerWorld w = srv.getOverworld();
                         w.setTimeOfDay(6000);
                         for (int i = 0; i < 3; i++) {
                             var pig = EntityType.PIG.create(w, SpawnReason.COMMAND);
