@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	AppVersion = "1.0.0"
+	AppVersion = "1.1.0"
 	MCVersion  = "1.21.11"
 	ProfileKey = "sprinkleclient"
 	FabricAPI  = "P7dR8mSH" // Modrinth project id of Fabric API
