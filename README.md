@@ -1,6 +1,6 @@
 # Sprinkle Client 🍩
 
-A **Donut SMP** themed Minecraft client for **1.21.11** (Fabric). By **DarkerDawnFR**.
+A **Donut SMP** themed Minecraft client for **1.21, 1.21.1, 1.21.8, 1.21.9 and 1.21.11** (Fabric, pick in the installer). By **DarkerDawnFR**.
 Every button says **Donut SMP**, and every one of them takes you to Donut SMP.
 
 > Fan-made. Not affiliated with DrDonut or Donut SMP.

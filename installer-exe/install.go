@@ -22,12 +22,17 @@ import (
 )
 
 const (
-	AppVersion = "1.1.1"
-	MCVersion  = "1.21.11"
+	AppVersion = "1.2.0"
 	ProfileKey = "sprinkleclient"
 	FabricAPI  = "P7dR8mSH" // Modrinth project id of Fabric API
 	UserAgent  = "DarkerDawnFR/SprinkleClient-Installer/" + AppVersion
 )
+
+// MCVersion is the Minecraft version being installed (picked in the installer).
+var MCVersion = "1.21.11"
+
+// Versions the installer offers, newest first.
+var Versions = []string{"1.21.11", "1.21.9", "1.21.8", "1.21.1", "1.21"}
 
 //go:embed embed
 var embedded embed.FS
@@ -58,6 +63,7 @@ var Catalog = []ExtraMod{
 
 // Settings is saved in <gameDir>/launcher.json.
 type Settings struct {
+	MC   string          `json:"mc"`
 	RAM  int             `json:"ram"`
 	Mods map[string]bool `json:"mods"`
 }
@@ -76,7 +82,7 @@ func paths() Paths {
 }
 
 func loadSettings(p Paths) Settings {
-	s := Settings{RAM: 4, Mods: map[string]bool{}}
+	s := Settings{MC: "1.21.11", RAM: 4, Mods: map[string]bool{}}
 	if b, err := os.ReadFile(filepath.Join(p.GameDir, "installer.json")); err == nil {
 		_ = json.Unmarshal(b, &s)
 	}
@@ -269,6 +275,12 @@ func Install(p Paths, s Settings, progress progressFn) (*Report, error) {
 	if err := os.MkdirAll(mods, 0o755); err != nil {
 		return r, err
 	}
+	MCVersion = "1.21.11"
+	for _, v := range Versions {
+		if v == s.MC {
+			MCVersion = v
+		}
+	}
 	progress(0.04, "Getting Fabric for Minecraft "+MCVersion+"...")
 	id, err := installFabric(p)
 	if err != nil {
@@ -370,14 +382,14 @@ func installSprinkle(mods string) (string, error) {
 	var name string
 	var data []byte
 	_ = fs.WalkDir(embedded, "embed", func(path string, d fs.DirEntry, err error) error {
-		if err == nil && !d.IsDir() && strings.HasSuffix(path, ".jar") {
+		if err == nil && !d.IsDir() && strings.HasSuffix(path, "+mc"+MCVersion+".jar") {
 			name = filepath.Base(path)
 			data, _ = embedded.ReadFile(path)
 		}
 		return nil
 	})
 	if data == nil {
-		return "", errors.New("this installer build has no Sprinkle Client mod inside")
+		return "", errors.New("this installer has no Sprinkle Client for Minecraft " + MCVersion)
 	}
 	entries, _ := os.ReadDir(mods)
 	for _, e := range entries {

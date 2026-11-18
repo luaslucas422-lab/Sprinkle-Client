@@ -12,6 +12,7 @@ import (
 type State struct {
 	Version   string                `json:"version"`
 	MC        string                `json:"mc"`
+	Versions  []string              `json:"versions"`
 	Settings  Settings              `json:"settings"`
 	Catalog   map[string][]ExtraMod `json:"catalog"`
 	MCFound   bool                  `json:"mcFound"`
@@ -26,6 +27,7 @@ func currentState() State {
 	return State{
 		Version:   AppVersion,
 		MC:        MCVersion,
+		Versions:  Versions,
 		Settings:  loadSettings(p),
 		Catalog:   catalogByCategory(),
 		MCFound:   mcErr == nil,
@@ -62,6 +64,9 @@ func selfTest(dir string) int {
 	_ = os.MkdirAll(p.MCDir, 0o755)
 	_ = os.WriteFile(p.MCDir+string(os.PathSeparator)+"launcher_profiles.json", []byte(`{"profiles":{"other":{"name":"Keep me","type":"custom"}},"settings":{"keepThis":true},"version":3}`), 0o644)
 	s := loadSettings(p)
+	if v := os.Getenv("SPRINKLE_MC"); v != "" {
+		s.MC = v
+	}
 	_ = saveSettings(p, s)
 	rep, err := Install(p, s, func(pct float64, msg string) { fmt.Printf("[%3.0f%%] %s\n", pct*100, msg) })
 	fmt.Println("REPORT " + jsonString(rep))

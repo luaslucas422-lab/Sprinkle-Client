@@ -17,11 +17,15 @@ java {
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 
 // The Sprinkle Client mod jar goes inside the installer: -PmodJar=path/to/SprinkleClient.jar
-def modJar = project.findProperty('modJar')
+// All Sprinkle Client mod jars go inside: -PmodJars=folder (files named SprinkleClient-x+mc<version>.jar)
+def modJars = project.findProperty('modJars')
 
 processResources {
-    if (modJar) {
-        from(file(modJar)) { into 'sprinkle'; rename { 'SprinkleClient-mod.jar' } }
+    if (modJars) {
+        from(fileTree(modJars).matching { include '*.jar'; exclude '*-sources.jar' }) {
+            into 'sprinkle'
+            rename { n -> (n =~ /\+mc(.+)\.jar$/)[0][1] + '.jar' }
+        }
     }
 }
 

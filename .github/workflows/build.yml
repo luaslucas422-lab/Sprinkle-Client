@@ -14,30 +14,27 @@ jobs:
         with: { distribution: temurin, java-version: 25 }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '9.8.2' }
-      - name: Pick the newest Yarn mappings for 1.21.11
-        run: |
-          Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/1.21.11 | jq -r '.[0].version')
-          echo "yarn: $Y"
-          [ -n "$Y" ] && [ "$Y" != null ] && sed -i "s/^yarn_mappings=.*/yarn_mappings=$Y/" mod/gradle.properties
-          grep yarn mod/gradle.properties | tee yarn.log
-      - name: Build mod + unit tests
-        working-directory: mod
+      - name: Build the mod for every Minecraft version
         run: |
           set -o pipefail
-          gradle build --stacktrace 2>&1 | tee ../mod-build.log
+          mkdir -p dist/mods
+          for MC in 1.21.11 1.21.9 1.21.8 1.21.1 1.21; do
+            Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/$MC | jq -r '.[0].version')
+            F=$(curl -s "https://api.modrinth.com/v2/project/fabric-api/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%22$MC%22%5D" | jq -r '.[0].version_number')
+            echo "== $MC yarn=$Y fabric=$F" | tee -a mod-build.log
+            (cd mod && gradle clean build -Pmc=$MC -Pyarn_$MC=$Y -Pfabric_$MC=$F $([ "$MC" != 1.21.11 ] && echo "-x test") --stacktrace) 2>&1 | tee -a mod-build.log
+            cp $(ls mod/build/libs/*.jar | grep -v sources) dist/mods/
+          done
+          ls -la dist/mods
       - name: Build the .jar installer
         run: |
-          JAR=$(ls mod/build/libs/*.jar | grep -v sources | head -1)
-          echo "mod jar: $JAR"
-          gradle -p installer-jar build -PmodJar="$PWD/$JAR" --stacktrace
-          mkdir -p dist
+          gradle -p installer-jar build -PmodJars="$PWD/dist/mods" --stacktrace
           cp installer-jar/build/libs/SprinkleClient-Installer.jar dist/
-          cp "$JAR" dist/
-          ls -la dist
       - name: Jar installer self-test (real Fabric + Modrinth downloads)
         run: |
           set -o pipefail
-          java -jar dist/SprinkleClient-Installer.jar --selftest "$RUNNER_TEMP/jartest" 2>&1 | tee jar-selftest.log
+          java -jar dist/SprinkleClient-Installer.jar --selftest "$RUNNER_TEMP/jartest" 1.21.11 2>&1 | tee jar-selftest.log
+          java -jar dist/SprinkleClient-Installer.jar --selftest "$RUNNER_TEMP/jartest121" 1.21.1 2>&1 | tee -a jar-selftest.log
       - name: Save results for review (branch ci-build)
         if: always()
         run: |
@@ -47,11 +44,7 @@ jobs:
           git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "build ${{ github.run_id }}"
           git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-build
       - uses: actions/upload-artifact@v4
-        with:
-          name: SprinkleClient-mod
-          path: |
-            mod/build/libs/*.jar
-            !mod/build/libs/*-sources.jar
+        with: { name: SprinkleClient-mod, path: dist/mods/*.jar }
       - uses: actions/upload-artifact@v4
         with: { name: SprinkleClient-Installer-jar, path: dist/SprinkleClient-Installer.jar }
 
@@ -101,6 +94,9 @@ jobs:
           $dir = Join-Path $env:RUNNER_TEMP "appdata"
           & .\dist\SprinkleClient-selftest.exe --selftest $dir *>&1 | Tee-Object -FilePath exe-selftest.log
           if ($LASTEXITCODE -ne 0) { throw "installer self-test failed" }
+          $env:SPRINKLE_MC = "1.21.1"
+          & .\dist\SprinkleClient-selftest.exe --selftest (Join-Path $env:RUNNER_TEMP "appdata121") *>&1 | Tee-Object -FilePath exe-selftest.log -Append
+          if ($LASTEXITCODE -ne 0) { throw "installer self-test (1.21.1) failed" }
           Get-ChildItem (Join-Path $dir ".sprinkleclient\mods") | Select-Object Name, Length | Format-Table -AutoSize
       - name: Save results for review (branch ci-windows)
         if: always()

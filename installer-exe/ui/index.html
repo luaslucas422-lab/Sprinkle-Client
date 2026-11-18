@@ -47,6 +47,7 @@
   <img class="donut" src="{{donut.png}}" alt="">
   <h1>Sprinkle Client</h1>
   <div class="sub" id="sub">Donut SMP client &middot; Minecraft 1.21.11 &middot; Fabric</div>
+  <label class="sub">Minecraft version <select id="mcver"></select></label>
   <button class="btn" id="install">INSTALL</button>
   <div class="bar" id="bar"><div id="fill"></div></div>
   <div class="msg" id="msg"></div>
@@ -134,6 +135,9 @@ window.onDone = (ok, msg, skipped) => {
 (async () => {
   state = await sprState();
   renderOpts();
+  const sel = $("mcver");
+  sel.innerHTML = state.versions.map(v => `<option ${v === (state.settings.mc || "1.21.11") ? "selected" : ""}>${v}</option>`).join("");
+  sel.onchange = () => { state.settings.mc = sel.value; save(); $("sub").textContent = "Donut SMP client · Minecraft " + sel.value + " · Fabric"; };
   if (!state.mcFound) $("msg").textContent = "Minecraft isn't installed yet. Install the Minecraft Launcher and press Play once first.";
   if (state.installed) $("install").textContent = "REINSTALL / UPDATE";
 })();

@@ -31,5 +31,5 @@ jobs:
           gh release delete "${{ env.TAG }}" -y --cleanup-tag -R "${{ github.repository }}" 2>/dev/null || true
           gh release create "${{ env.TAG }}" out/* --target "${{ github.sha }}" \
             --title "Sprinkle Client ${{ env.TAG }}" \
-            --notes "The Donut SMP client. Windows: run **SprinkleClient-Installer.exe**. Mac/Linux: run **SprinkleClient-Installer.jar**. Then open the Minecraft Launcher, pick Sprinkle Client and press Play. Minecraft 1.21.11 (Fabric). Fan-made, not affiliated with DrDonut or Donut SMP." \
+            --notes "The Donut SMP client. Windows: run **SprinkleClient-Installer.exe**. Mac/Linux: run **SprinkleClient-Installer.jar**. Then open the Minecraft Launcher, pick Sprinkle Client and press Play. Pick Minecraft 1.21, 1.21.1, 1.21.8, 1.21.9 or 1.21.11 in the installer (Fabric). Fan-made, not affiliated with DrDonut or Donut SMP." \
             --repo "${{ github.repository }}"

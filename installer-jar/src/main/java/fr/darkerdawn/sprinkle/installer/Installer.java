@@ -32,7 +32,8 @@ import java.util.zip.ZipOutputStream;
 
 /** Fabric-installer-style installer: adds Fabric 1.21.11, Sprinkle Client, the speed mods and a launcher profile. */
 public final class Installer {
-    static final String MC = "1.21.11";
+    static final String[] VERSIONS = {"1.21.11", "1.21.9", "1.21.8", "1.21.1", "1.21"};
+    static volatile String MC = "1.21.11";
     static final String PROFILE_KEY = "sprinkleclient";
     static final String UA = "DarkerDawnFR/SprinkleClient-Installer/1.0.0";
 
@@ -128,8 +129,8 @@ public final class Installer {
         r.fabricId = id;
 
         progress.accept(0.12, "Adding sprinkles...");
-        try (InputStream in = Installer.class.getResourceAsStream("/sprinkle/SprinkleClient-mod.jar")) {
-            if (in == null) throw new IOException("This installer has no Sprinkle Client mod inside.");
+        try (InputStream in = Installer.class.getResourceAsStream("/sprinkle/" + MC + ".jar")) {
+            if (in == null) throw new IOException("This installer has no Sprinkle Client for Minecraft " + MC + ".");
             try (var list = Files.list(mods)) {
                 for (Path p : list.toList()) if (p.getFileName().toString().toLowerCase(Locale.ROOT).startsWith("sprinkleclient")) Files.delete(p);
             }
@@ -238,6 +239,7 @@ public final class Installer {
     // ------------------------------------------------------------------ entry
 
     public static void main(String[] args) throws Exception {
+        if (args.length >= 3) MC = args[2];
         if (args.length >= 2 && args[0].equals("--selftest")) {
             System.exit(selfTest(Paths.get(args[1])));
         }
@@ -312,7 +314,11 @@ public final class Installer {
             root.setBorder(BorderFactory.createEmptyBorder(170, 36, 18, 36));
 
             JLabel title = label("Sprinkle Client", 32f, Font.BOLD, Color.WHITE);
-            JLabel sub = label("Donut SMP client  ·  Minecraft " + MC + "  ·  Fabric", 13f, Font.PLAIN, new Color(0xD8ECFF));
+            JLabel sub = label("Donut SMP client  ·  Fabric  ·  pick your Minecraft version:", 13f, Font.PLAIN, new Color(0xD8ECFF));
+            JComboBox<String> ver = new JComboBox<>(VERSIONS);
+            ver.setMaximumSize(new Dimension(140, 26));
+            ver.setAlignmentX(0.5f);
+            ver.addActionListener(e -> MC = (String) ver.getSelectedItem());
             JButton install = new JButton("INSTALL");
             style(install, FROSTING, 24f);
             JProgressBar bar = new JProgressBar(0, 1000);
@@ -393,6 +399,8 @@ public final class Installer {
 
             root.add(title);
             root.add(sub);
+            root.add(Box.createVerticalStrut(6));
+            root.add(ver);
             root.add(Box.createVerticalStrut(16));
             root.add(install);
             root.add(Box.createVerticalStrut(14));
