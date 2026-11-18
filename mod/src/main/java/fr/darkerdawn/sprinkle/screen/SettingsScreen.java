@@ -50,9 +50,6 @@ public class SettingsScreen extends SprinkleScreen {
                 button(right, y, cw, "Slideshow: " + onOff(c.backgroundSlideshow), b -> { c.backgroundSlideshow = !c.backgroundSlideshow; save(); });
                 y += 24;
                 button(left, y, cw, "Themed pause menu: " + onOff(c.themedPause), b -> { c.themedPause = !c.themedPause; save(); });
-                button(right, y, cw, "Menu video: " + onOff(c.menuVideo), b -> { c.menuVideo = !c.menuVideo; save(); });
-                y += 24;
-                button(left, y, cw, "Video folder", b -> open(fr.darkerdawn.sprinkle.MenuVideo.dir()));
                 button(right, y, cw, "Reload pictures", b -> {
                     fr.darkerdawn.sprinkle.MenuVideo.reload();
                     Textures.reload();
@@ -60,7 +57,7 @@ public class SettingsScreen extends SprinkleScreen {
                     note = Textures.backgrounds().size() + " background(s), sky: " + (SkyChanger.hasSky() ? "yes" : "none");
                 });
                 y += 30;
-                note(y, "Put an .mp4 or .gif in the video folder to loop it next to Rage Quit.");
+                note(y, "Vanilla brings back the normal buttons, logo and splashes.");
             }
             case 1 -> {
                 button(left, y, cw, "Ka-ching clicks: " + onOff(c.cashClick), b -> { c.cashClick = !c.cashClick; save(); });
