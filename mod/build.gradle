@@ -7,6 +7,7 @@ group = 'fr.darkerdawn.sprinkle'
 base { archivesName = 'SprinkleClient' }
 
 repositories {
+    maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven'; content { includeGroup 'maven.modrinth' } }
     maven { name = 'Henkelmax'; url = 'https://maven.maxhenkel.de/repository/public' }
     mavenCentral()
 }
@@ -34,6 +35,10 @@ dependencies {
     include 'org.jcodec:jcodec-javase:0.2.5'
     // Simple Voice Chat plugin API (only used when Simple Voice Chat is installed)
     compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.0'
+
+    // only for the in-game test (set by CI): real Mod Menu and Simple Voice Chat
+    if (project.hasProperty('modmenu_test')) modLocalRuntime "maven.modrinth:modmenu:${project.modmenu_test}"
+    if (project.hasProperty('simple_voice_chat_test')) modLocalRuntime "maven.modrinth:simple-voice-chat:${project.simple_voice_chat_test}"
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

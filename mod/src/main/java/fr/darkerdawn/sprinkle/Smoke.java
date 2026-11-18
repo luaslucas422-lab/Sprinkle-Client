@@ -177,6 +177,18 @@ final class Smoke {
         }
     }
 
+    /** Opens another mod's screen if that mod is installed (Mod Menu, Simple Voice Chat). */
+    private static void open(MinecraftClient c, String cls, boolean withParent) {
+        try {
+            Class<?> k = Class.forName(cls);
+            Object s = withParent ? k.getConstructor(net.minecraft.client.gui.screen.Screen.class).newInstance(c.currentScreen) : k.getConstructor().newInstance();
+            c.setScreen((net.minecraft.client.gui.screen.Screen) s);
+            System.out.println("[SPRINKLE-SMOKE] opened " + cls);
+        } catch (Throwable t) {
+            System.out.println("[SPRINKLE-SMOKE] could not open " + cls + ": " + t);
+        }
+    }
+
     private static void title(MinecraftClient c) {
         titleTicks++;
         switch (titleTicks) {
@@ -195,9 +207,16 @@ final class Smoke {
             case 238 -> shot(c, "soundboard");
             case 240 -> c.setScreen(new AntiLeakScreen(null));
             case 256 -> shot(c, "anti-leak blocks");
-            case 258 -> c.setScreen(new JoinLoadingScreen(new SprinkleTitleScreen()));
-            case 274 -> shot(c, "join loading screen");
-            case 276 -> {
+            case 258 -> open(c, "com.terraformersmc.modmenu.gui.ModsScreen", true);
+            case 276 -> shot(c, "mod menu");
+            case 278 -> open(c, "de.maxhenkel.voicechat.gui.VoiceChatScreen", false);
+            case 296 -> shot(c, "voice chat");
+            case 298 -> {
+                check("soundboard voice plugin loaded", !net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("voicechat")
+                        || fr.darkerdawn.sprinkle.feature.Soundboard.voiceAvailable);
+                c.setScreen(new JoinLoadingScreen(new SprinkleTitleScreen()));
+            case 314 -> shot(c, "join loading screen");
+            case 316 -> {
                 c.setScreen(new SprinkleTitleScreen());
                 check("config file saved", Files.exists(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("sprinkleclient.json")));
                 System.out.println("[SPRINKLE-SMOKE] done, failures=" + fails);

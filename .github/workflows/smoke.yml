@@ -22,6 +22,15 @@ jobs:
           echo "yarn: $Y"
           [ -n "$Y" ] && [ "$Y" != null ] && sed -i "s/^yarn_mappings=.*/yarn_mappings=$Y/" mod/gradle.properties
           grep yarn mod/gradle.properties | tee yarn.log
+      - name: Pick Mod Menu + Simple Voice Chat builds for the in-game test
+        run: |
+          for p in modmenu simple-voice-chat; do
+            V=$(curl -s "https://api.modrinth.com/v2/project/$p/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%221.21.11%22%5D" | jq -r '.[0].id')
+            echo "$p: $V"
+            KEY=$(echo $p | tr '-' '_')_test
+            [ -n "$V" ] && [ "$V" != null ] && echo "$KEY=$V" >> mod/gradle.properties
+          done
+          tail -3 mod/gradle.properties
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri imagemagick ffmpeg >/dev/null
       - name: Make a test world
         working-directory: mod
