@@ -37,6 +37,8 @@ final class Smoke {
     private Smoke() {}
 
     static final boolean ON = Boolean.getBoolean("sprinkle.smoke");
+    /** Trailer footage: no chat, no popups, plain menu background. */
+    static final boolean TRAILER = Boolean.getBoolean("sprinkle.trailer");
     private static int ticks, worldTicks, titleTicks = -1, fails;
     private static boolean loadingShot;
 
@@ -68,6 +70,10 @@ final class Smoke {
 
     static void tick(MinecraftClient c) {
         ticks++;
+        if (TRAILER && c.inGameHud != null) {
+            c.inGameHud.getChatHud().clear(false);
+            c.getToastManager().clear();
+        }
         if (c.getOverlay() != null) {
             if (!loadingShot && ticks > 30) { loadingShot = true; shot(c, "loading"); }
             return;
@@ -154,6 +160,7 @@ final class Smoke {
                 fr.darkerdawn.sprinkle.compat.Compat.leaveWorld(c);
                 c.setScreen(new TitleScreen());
                 titleTicks = 0;
+                if (TRAILER) { cfg.backgroundSlideshow = false; cfg.streamerMode = false; }
             }
             default -> { }
         }

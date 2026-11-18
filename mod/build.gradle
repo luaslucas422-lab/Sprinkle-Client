@@ -23,6 +23,7 @@ loom {
         client {
             if (System.getenv('SPRINKLE_SMOKE')) {
                 vmArg '-Dsprinkle.smoke=true'
+                if (System.getenv('SPRINKLE_TRAILER')) vmArg '-Dsprinkle.trailer=true'
                 programArgs '--quickPlaySingleplayer', 'smoke'
             }
         }

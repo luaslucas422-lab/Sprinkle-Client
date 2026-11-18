@@ -1,0 +1,88 @@
+name: Trailer
+permissions:
+  contents: write
+on:
+  push:
+    branches: [main]
+    paths: ['trailer/**', '.github/workflows/trailer.yml']
+  workflow_dispatch: {}
+jobs:
+  footage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 25 }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '9.8.2' }
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri ffmpeg >/dev/null
+      - name: Yarn
+        run: |
+          Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/1.21.11 | jq -r '.[0].version')
+          sed -i "s/^yarn_mappings=.*/yarn_mappings=$Y/" mod/gradle.properties
+          V=$(curl -s "https://api.modrinth.com/v2/project/simple-voice-chat/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%221.21.11%22%5D" | jq -r '.[0].id')
+          echo "simple_voice_chat_test=$V" >> mod/gradle.properties
+      - name: Test world
+        working-directory: mod
+        run: |
+          mkdir -p run && cd run && echo eula=true > eula.txt
+          printf 'level-type=minecraft\\:flat\nonline-mode=false\nspawn-monsters=false\n' > server.properties
+          cd .. && (gradle runServer --args nogui > server.out 2>&1 &)
+          for i in $(seq 1 120); do sleep 3; grep -q 'Done (' run/logs/latest.log 2>/dev/null && break; done
+          sleep 5; pkill -f KnotServer || true; sleep 5; gradle --stop || true
+          mkdir -p run/saves && cp -r run/world run/saves/smoke && rm -f run/saves/smoke/session.lock
+      - name: Film the client
+        working-directory: mod
+        env: { SPRINKLE_SMOKE: '1', SPRINKLE_TRAILER: '1' }
+        run: |
+          printf 'onboardAccessibility:false\ntutorialStep:none\nnarrator:0\nsoundCategory_master:0.0\nguiScale:2\n' > run/options.txt
+          xvfb-run -a -s "-screen 0 1280x720x24" timeout 1200 gradle runClient > client.out 2>&1 || true
+          mkdir -p ../shots && cp run/screenshots/*.png ../shots/ && cp client.out ../shots/client.out.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: footage, path: shots/* }
+
+  render:
+    strategy:
+      matrix:
+        part: ['drop 1 40', 'drop 41 80', 'drop 81 120', 'spawners 1 40', 'spawners 41 80', 'spawners 81 120',
+               'pig 1 60', 'pig 61 120', 'outro 1 50', 'outro 51 100', 'outro 101 150']
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.13' }
+      - run: pip install -q bpy
+      - name: Render ${{ matrix.part }}
+        run: |
+          set -- ${{ matrix.part }}
+          python trailer/scenes.py $1 $2 $3 frames 24
+          ls frames | wc -l
+      - uses: actions/upload-artifact@v4
+        with: { name: "frames-${{ strategy.job-index }}", path: frames/*.png }
+
+  cut:
+    needs: [footage, render]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core >/dev/null && pip install -q --break-system-packages pillow
+      - uses: actions/download-artifact@v4
+        with: { pattern: 'frames-*', path: frames, merge-multiple: true }
+      - uses: actions/download-artifact@v4
+        with: { name: footage, path: footage }
+      - name: Cut the trailer
+        run: |
+          ls frames | wc -l; ls footage | head -40
+          mkdir -p out
+          python3 trailer/compose.py frames footage mod/src/main/resources/assets/sprinkleclient/sounds/menu_music.ogg out/SprinkleClient-Trailer.mp4
+      - uses: actions/upload-artifact@v4
+        with: { name: trailer, path: out/SprinkleClient-Trailer.mp4 }
+      - name: Save for review (branch ci-trailer)
+        if: always()
+        run: |
+          mkdir -p /tmp/res && cp out/*.mp4 /tmp/res/ 2>/dev/null || true
+          cd /tmp/res && echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "trailer ${{ github.run_id }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-trailer
