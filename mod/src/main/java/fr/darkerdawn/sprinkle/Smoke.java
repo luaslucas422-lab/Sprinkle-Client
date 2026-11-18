@@ -215,6 +215,7 @@ final class Smoke {
                 check("soundboard voice plugin loaded", !net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("voicechat")
                         || fr.darkerdawn.sprinkle.feature.Soundboard.voiceAvailable);
                 c.setScreen(new JoinLoadingScreen(new SprinkleTitleScreen()));
+            }
             case 314 -> shot(c, "join loading screen");
             case 316 -> {
                 c.setScreen(new SprinkleTitleScreen());
