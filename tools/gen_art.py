@@ -323,9 +323,10 @@ def voicechat_textures(root):
     d.rectangle([0, 0, 194, 75], fill=OUTLINE + (255,))
     d.rectangle([2, 2, 192, 73], fill=(10, 42, 92, 255))
     d.rectangle([2, 2, 192, 4], fill=FROSTING + (255,))
+    d.rectangle([2, 5, 192, 17], fill=(191, 227, 255, 255))  # light band so Voice Chat's dark title reads
     r = random.Random(9)
     for _ in range(50):
-        x, y = r.randint(4, 188), r.randint(6, 70)
+        x, y = r.randint(4, 188), r.randint(20, 70)
         d.rectangle([x, y, x + (2 if r.random() < 0.5 else 0), y + (0 if r.random() < 0.5 else 1)], fill=r.choice(SPRINKLES) + (160,))
     save(panel, os.path.join(gui, "gui_voicechat.png"))
 
