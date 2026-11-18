@@ -1,0 +1,46 @@
+name: Other versions
+permissions:
+  contents: write
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ['1.21', '1.21.1', '1.21.8', '1.21.9']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 25 }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '9.8.2' }
+      - name: Pick Yarn + Fabric API for ${{ matrix.mc }}
+        run: |
+          MC=${{ matrix.mc }}
+          Y=$(curl -s https://meta.fabricmc.net/v2/versions/yarn/$MC | jq -r '.[0].version')
+          F=$(curl -s "https://api.modrinth.com/v2/project/fabric-api/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%22$MC%22%5D" | jq -r '.[0].version_number')
+          echo "yarn_$MC=$Y" >> mod/gradle.properties
+          echo "fabric_$MC=$F" >> mod/gradle.properties
+          tail -2 mod/gradle.properties
+      - name: Build for ${{ matrix.mc }}
+        working-directory: mod
+        run: |
+          set -o pipefail
+          gradle build -Pmc=${{ matrix.mc }} -x test --stacktrace 2>&1 | tee ../build-${{ matrix.mc }}.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SprinkleClient-mod-${{ matrix.mc }}
+          path: |
+            mod/build/libs/*.jar
+            !mod/build/libs/*-sources.jar
+      - name: Save results (branch ci-v${{ matrix.mc }})
+        if: always()
+        run: |
+          mkdir -p /tmp/res && cp build-*.log /tmp/res/ 2>/dev/null || true
+          cd /tmp/res && echo "${{ github.sha }} ${{ job.status }}" > STATUS && git init -q && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "v${{ matrix.mc }} ${{ github.run_id }}"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/ci-v${{ matrix.mc }}

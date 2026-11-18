@@ -2,7 +2,12 @@ plugins {
     id 'net.fabricmc.fabric-loom-remap' version '1.19-SNAPSHOT'
 }
 
-version = "${project.mod_version}+mc${project.minecraft_version}"
+// Multi-version: -Pmc=1.21.9 builds for another Minecraft version.
+// Files in versions/<mc>/java replace the file with the same path in src/main/java.
+def mc = project.findProperty('mc') ?: project.minecraft_version
+def overlay = file("versions/${mc}/java")
+def overlayRes = file("versions/${mc}/resources")
+version = "${project.mod_version}+mc${mc}"
 group = 'fr.darkerdawn.sprinkle'
 base { archivesName = 'SprinkleClient' }
 
@@ -24,10 +29,10 @@ loom {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    minecraft "com.mojang:minecraft:${mc}"
+    mappings "net.fabricmc:yarn:${project.findProperty('yarn_' + mc) ?: project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.findProperty('fabric_' + mc) ?: project.fabric_version}"
     // looping main-menu video (pure-Java H.264 decoder), shipped inside our jar
     implementation 'org.jcodec:jcodec:0.2.5'
     implementation 'org.jcodec:jcodec-javase:0.2.5'
@@ -49,8 +54,18 @@ test {
     testLogging { events 'passed', 'failed'; exceptionFormat 'full' }
 }
 
+sourceSets.main {
+    if (overlay.exists()) {
+        java.srcDir overlay
+        def replaced = fileTree(overlay).collect { overlay.toPath().relativize(it.toPath()).toString().replace('\\', '/') }
+        java.exclude { el -> !el.file.toPath().startsWith(overlay.toPath()) && replaced.contains(el.relativePath.pathString) }
+    }
+    if (overlayRes.exists()) resources.srcDir overlayRes
+}
+
 processResources {
-    def props = [version: project.version]
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    def props = [version: project.version, mc: mc]
     inputs.properties props
     filesMatching('fabric.mod.json') { expand props }
 }

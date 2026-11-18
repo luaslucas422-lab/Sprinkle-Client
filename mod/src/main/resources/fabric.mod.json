@@ -15,7 +15,7 @@
   "mixins": ["sprinkleclient.mixins.json"],
   "depends": {
     "fabricloader": ">=0.18.0",
-    "minecraft": "~1.21.11",
+    "minecraft": "${mc}",
     "java": ">=21",
     "fabric-api": "*"
   },
