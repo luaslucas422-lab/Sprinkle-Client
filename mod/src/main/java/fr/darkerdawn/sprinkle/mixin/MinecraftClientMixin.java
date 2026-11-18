@@ -26,9 +26,9 @@ public abstract class MinecraftClientMixin {
     }
 
     /** Our own menu music on the Donut menu. */
-    @Inject(method = "getMusicInstance", at = @At("HEAD"), cancellable = true)
-    private void sprinkle$music(CallbackInfoReturnable<MusicSound> cir) {
-        if (currentScreen instanceof SprinkleTitleScreen && Config.get().menuMusic) cir.setReturnValue(Sounds.MENU);
+    @Inject(method = {"getMusicInstance", "getMusicType"}, at = @At("HEAD"), cancellable = true, require = 0)
+    private void sprinkle$music(CallbackInfoReturnable<Object> cir) {
+        if (currentScreen instanceof SprinkleTitleScreen && Config.get().menuMusic) cir.setReturnValue(fr.darkerdawn.sprinkle.compat.Compat.menuMusic());
     }
 
     @Inject(method = "getWindowTitle", at = @At("RETURN"), cancellable = true)

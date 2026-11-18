@@ -1,7 +1,12 @@
 {
   "pack": {
     "description": "Blue frosting buttons for Sprinkle Client",
-    "min_format": 69,
+    "pack_format": 34,
+    "supported_formats": [
+      34,
+      2048
+    ],
+    "min_format": 34,
     "max_format": 2048
   }
 }

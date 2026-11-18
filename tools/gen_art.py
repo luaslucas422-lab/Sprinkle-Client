@@ -356,7 +356,7 @@ def main():
 
     # Sprinkle Blue Buttons pack
     blue = os.path.join(PACKS, "sprinkle_blue")
-    write_json(os.path.join(blue, "pack.mcmeta"), {"pack": {"description": "Blue frosting buttons for Sprinkle Client", "min_format": 69, "max_format": 2048}})
+    write_json(os.path.join(blue, "pack.mcmeta"), {"pack": {"description": "Blue frosting buttons for Sprinkle Client", "pack_format": 34, "supported_formats": [34, 2048], "min_format": 34, "max_format": 2048}})
     save(donut.resize((64, 64), Image.LANCZOS), os.path.join(blue, "pack.png"))
     sprites = os.path.join(blue, "assets/minecraft/textures/gui/sprites/widget")
     meta = {"gui": {"scaling": {"type": "nine_slice", "width": 200, "height": 20, "border": 3}}}
@@ -366,7 +366,7 @@ def main():
 
     # Donut SMP pack (cursed)
     pack = os.path.join(PACKS, "donut_smp")
-    write_json(os.path.join(pack, "pack.mcmeta"), {"pack": {"description": "Cursed DrDonut-themed pack. Pigs meow now.", "min_format": 69, "max_format": 2048}})
+    write_json(os.path.join(pack, "pack.mcmeta"), {"pack": {"description": "Cursed DrDonut-themed pack. Pigs meow now.", "pack_format": 34, "supported_formats": [34, 2048], "min_format": 34, "max_format": 2048}})
     save(pixel_donut(64, face=True), os.path.join(pack, "pack.png"))
     tex = os.path.join(pack, "assets/minecraft/textures")
     pig = donut_pig()
@@ -384,7 +384,7 @@ def main():
 
     # Donut Stone pack (stone & deepslate become a donut tile; rotation removal is done in code by Anti-Leak)
     leak = os.path.join(PACKS, "donut_stone")
-    write_json(os.path.join(leak, "pack.mcmeta"), {"pack": {"description": "Donut stone and deepslate", "min_format": 69, "max_format": 2048}})
+    write_json(os.path.join(leak, "pack.mcmeta"), {"pack": {"description": "Donut stone and deepslate", "pack_format": 34, "supported_formats": [34, 2048], "min_format": 34, "max_format": 2048}})
     save(pixel_donut(64), os.path.join(leak, "pack.png"))
     btex = os.path.join(leak, "assets/minecraft/textures/block")
     small = donut.resize((14, 14), Image.LANCZOS)
@@ -400,7 +400,7 @@ def main():
 
     # Donut Voice Chat pack (themes Simple Voice Chat when it's installed)
     vc = os.path.join(PACKS, "donut_voicechat")
-    write_json(os.path.join(vc, "pack.mcmeta"), {"pack": {"description": "Donut SMP theme for Simple Voice Chat", "min_format": 69, "max_format": 2048}})
+    write_json(os.path.join(vc, "pack.mcmeta"), {"pack": {"description": "Donut SMP theme for Simple Voice Chat", "pack_format": 34, "supported_formats": [34, 2048], "min_format": 34, "max_format": 2048}})
     save(pixel_donut(64), os.path.join(vc, "pack.png"))
     voicechat_textures(vc)
 

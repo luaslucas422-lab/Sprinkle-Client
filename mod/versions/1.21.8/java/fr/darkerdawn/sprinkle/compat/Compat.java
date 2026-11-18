@@ -65,6 +65,11 @@ public final class Compat {
         ScreenMouseEvents.beforeMouseClick(screen).register((s, mx, my, button) -> r.run());
     }
 
+    /** What the game plays as menu music on the Donut menu. */
+    public static Object menuMusic() {
+        return new net.minecraft.client.sound.MusicInstance(Sounds.MENU);
+    }
+
     /** Smoke test helpers. */
     public static net.minecraft.entity.Entity spawnTestPig(net.minecraft.server.world.ServerWorld w) {
         return net.minecraft.entity.EntityType.PIG.create(w, net.minecraft.entity.SpawnReason.COMMAND);
