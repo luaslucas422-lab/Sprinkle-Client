@@ -1,11 +1,7 @@
 name: Release
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag (e.g. v1.0.0)'
-        required: true
-        default: 'v1.0.0'
+  push:
+    tags: ['v*']
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -29,7 +25,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ inputs.tag }}" out/* \
-            --title "Sprinkle Client ${{ inputs.tag }}" \
+          gh release create "${{ github.ref_name }}" out/* \
+            --title "Sprinkle Client ${{ github.ref_name }}" \
             --notes "The Donut SMP client. Windows: run **SprinkleClient-Installer.exe**. Mac/Linux: run **SprinkleClient-Installer.jar**. Then open the Minecraft Launcher, pick Sprinkle Client and press Play. Minecraft 1.21.11 (Fabric). Fan-made, not affiliated with DrDonut or Donut SMP." \
             --repo "${{ github.repository }}"

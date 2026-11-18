@@ -10,7 +10,7 @@ Every button says **Donut SMP**, and every one of them takes you to Donut SMP.
 - **Mac / Linux:** download **SprinkleClient-Installer.jar** and double-click it (needs Java 17+).
 
 Then open the Minecraft Launcher, pick the **Sprinkle Client** profile and press **Play**.
-The installer adds Fabric for 1.21.11, Sprinkle Client and the speed mods (Sodium, Lithium, FerriteCore, ImmediatelyFast, Entity Culling, ModernFix, Iris, Zoomify, Mod Menu). Untick any of them under **Options**.
+The installer adds Fabric for 1.21.11, Sprinkle Client and the speed mods (Sodium, Lithium, FerriteCore, ImmediatelyFast, Entity Culling, Iris, Zoomify, Mod Menu). Untick any of them under **Options**.
 
 ## The main menu
 - Donut SMP logo (drop your own `logo.png` in `config/sprinkleclient/` to replace it).

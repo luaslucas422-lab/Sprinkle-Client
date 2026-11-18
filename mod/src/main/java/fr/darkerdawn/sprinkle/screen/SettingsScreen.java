@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 /** The bottom-right gear: menu, sounds, Donut mods, links and folders. */
 public class SettingsScreen extends SprinkleScreen {
-    private static final String[] TABS = {"Menu", "Sounds", "Donut Mods", "Links & Folders"};
+    private static final String[] TABS = {"Menu", "Sounds", "Donut Mods", "Links"};
     private static int tab;
     private String note = "";
 

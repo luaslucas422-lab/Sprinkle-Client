@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 /** Edit what the Fake Scoreboard says, with a live preview on the right. */
 public class ScoreboardEditorScreen extends SprinkleScreen {
     private final List<Object[]> labels = new ArrayList<>();
+    private int rowH = 19;
 
     public ScoreboardEditorScreen(Screen parent) {
         super("Fake Scoreboard Editor", parent);
@@ -30,6 +31,7 @@ public class ScoreboardEditorScreen extends SprinkleScreen {
         ph = Math.min(height - 16, 280);
         px = 8;
         py = (height - ph) / 2;
+        rowH = Math.max(13, Math.min(19, (ph - 58) / 10));
         int y = py + 24;
         y = field(y, "Title", () -> f.title, v -> f.title = v);
         y = field(y, "Name", () -> f.name, v -> f.name = v);
@@ -50,13 +52,13 @@ public class ScoreboardEditorScreen extends SprinkleScreen {
 
     private int field(int y, String label, Supplier<String> get, Consumer<String> set) {
         int fx = px + 72;
-        TextFieldWidget t = new TextFieldWidget(textRenderer, fx, y, pw - 80, 16, Text.literal(label));
+        TextFieldWidget t = new TextFieldWidget(textRenderer, fx, y, pw - 80, rowH - 2, Text.literal(label));
         t.setMaxLength(40);
         t.setText(get.get());
         t.setChangedListener(s -> { set.accept(s); Config.save(); });
         addDrawableChild(t);
-        labels.add(new Object[]{px + 10, y + 4, label});
-        return y + 19;
+        labels.add(new Object[]{px + 10, y + (rowH - 2) / 2 - 4, label});
+        return y + rowH;
     }
 
     @Override

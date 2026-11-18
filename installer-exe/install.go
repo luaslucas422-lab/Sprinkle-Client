@@ -50,7 +50,6 @@ var Catalog = []ExtraMod{
 	{"ferrite-core", "FerriteCore", "Uses much less memory", "Performance", true},
 	{"immediatelyfast", "ImmediatelyFast", "Faster HUD, text and map drawing", "Performance", true},
 	{"entityculling", "Entity Culling", "Skips drawing mobs you can't see", "Performance", true},
-	{"modernfix", "ModernFix", "Faster loading, fewer stutters", "Load times", true},
 	{"iris", "Iris Shaders", "Shaders support (no shader on until you pick one)", "Extras", true},
 	{"zoomify", "Zoomify", "Zoom in with C", "Extras", true},
 	{"modmenu", "Mod Menu", "See and configure your mods", "Extras", true},

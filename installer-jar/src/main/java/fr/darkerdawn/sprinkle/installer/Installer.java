@@ -44,7 +44,6 @@ public final class Installer {
             new ExtraMod("ferrite-core", "FerriteCore", "Uses less memory"),
             new ExtraMod("immediatelyfast", "ImmediatelyFast", "Faster HUD and text"),
             new ExtraMod("entityculling", "Entity Culling", "Skips hidden mobs"),
-            new ExtraMod("modernfix", "ModernFix", "Faster loading"),
             new ExtraMod("iris", "Iris Shaders", "Shader support"),
             new ExtraMod("zoomify", "Zoomify", "Zoom with C"),
             new ExtraMod("modmenu", "Mod Menu", "See your mods"));

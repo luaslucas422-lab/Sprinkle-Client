@@ -54,7 +54,7 @@ public class CreditsScreen extends Screen {
         g.drawCenteredTextWithShadow(textRenderer, "Special thanks", cx, y, Theme.DOUGH_LIGHT);
         y += 14;
         for (String[] t : Jokes.THANKS) {
-            if (y > py + ph - 22) break;
+            if (y > py + ph - 30) break;
             g.drawTextWithShadow(textRenderer, t[0], px + 14, y, Theme.WHITE);
             g.drawTextWithShadow(textRenderer, t[1], px + 80, y, Theme.MUTED);
             y += 12;

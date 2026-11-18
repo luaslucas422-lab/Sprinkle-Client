@@ -38,7 +38,7 @@ public final class FakeScoreboard {
             rows.add(new String[]{"§7" + f.footer, ""});
             for (int i = 0; i < rows.size(); i++) rows.get(i)[1] = "§c" + (rows.size() - i);
         } else {
-            title = "§9§l" + f.title;
+            title = "§f§l" + f.title;
             rows.add(new String[]{"§f" + f.name, ""});
             rows.add(new String[]{"", ""});
             rows.add(new String[]{"§a$ §7Money", "§a" + f.money});
