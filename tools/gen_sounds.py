@@ -147,6 +147,88 @@ def meow(base=620, dur=0.55, shape="up", seed=0):
     return sig * env(len(t), 0.04, 0.12)
 
 
+# ------------------------------------------------------------------ soundboard (all synthesized)
+
+def sb_pay():
+    return mix(0.8, [(0, coin() * 0.8), (0.12, bell(1568, 0.6, 6) * 0.6), (0.2, bell(2093, 0.6, 6) * 0.5)])
+
+
+def sb_kill():
+    n = int(0.15 * SR)
+    crunch = rng.normal(0, 1, n) * np.exp(-np.arange(n) / SR * 25)
+    t = t_axis(0.25)
+    thud = np.sin(2 * np.pi * np.cumsum(90 + 200 * np.exp(-t * 20)) / SR) * np.exp(-t * 10)
+    return mix(1.0, [(0, crunch * 0.5), (0, thud), (0.25, bell(1318, 0.5, 6) * 0.5), (0.4, bell(1760, 0.6, 5) * 0.5)])
+
+
+def sb_airhorn():
+    parts = []
+    for i, dur in enumerate((0.25, 0.25, 0.9)):
+        t = t_axis(dur)
+        f = 466 * (1 + 0.004 * np.sin(2 * np.pi * 5 * t))
+        ph = 2 * np.pi * np.cumsum(f) / SR
+        saw = sum(np.sin(k * ph) / k for k in range(1, 25)) + 0.7 * sum(np.sin(k * ph * 1.5) / k for k in range(1, 15))
+        parts.append((i * 0.3, np.tanh(saw * 1.5) * env(len(t), 0.01, 0.05) * 0.4))
+    return mix(1.6, parts)
+
+
+def sb_boom():
+    t = t_axis(1.6)
+    f = 45 + 80 * np.exp(-t * 8)
+    tone = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 2.2)
+    click = rng.normal(0, 1, len(t)) * np.exp(-t * 60) * 0.3
+    return np.tanh((tone + click) * 2.5)
+
+
+def sb_drumroll():
+    out = []
+    for i in range(46):
+        n = int(0.06 * SR)
+        hit = rng.normal(0, 1, n) * np.exp(-np.arange(n) / SR * 40) * (0.25 + i / 92)
+        out.append((i * 0.045, hit))
+    crash_n = int(1.2 * SR)
+    out.append((2.1, rng.normal(0, 1, crash_n) * np.exp(-np.arange(crash_n) / SR * 3) * 0.6))
+    return mix(3.4, out)
+
+
+def sb_crickets():
+    parts = []
+    for i in range(8):
+        t = t_axis(0.12)
+        chirp = np.sin(2 * np.pi * 4300 * t) * (0.5 + 0.5 * np.sign(np.sin(2 * np.pi * 50 * t))) * env(len(t), 0.005, 0.02)
+        parts.append((i * 0.35 + (0.12 if i % 2 else 0), chirp * 0.3))
+    return mix(3.2, parts)
+
+
+def sb_scratch():
+    t = t_axis(0.7)
+    rate = np.where(t < 0.35, 1 - t * 4, -0.4 + (t - 0.35) * 3)
+    noise = rng.normal(0, 1, len(t))
+    base = np.cumsum(noise) * 0.02
+    sig = np.sin(2 * np.pi * np.cumsum(300 * np.abs(rate) + 80) / SR) * 0.5 + np.diff(np.concatenate([[0], base])) * 3
+    return sig * env(len(t), 0.005, 0.05)
+
+
+def sb_clown():
+    parts = []
+    for i, f in enumerate((660, 880)):
+        t = t_axis(0.18)
+        ph = 2 * np.pi * f * t * (1 + 0.15 * t)
+        honk = np.sign(np.sin(ph)) * 0.3 + np.sin(2 * ph) * 0.2
+        parts.append((i * 0.2, honk * env(len(t), 0.005, 0.03)))
+    return mix(0.5, parts)
+
+
+def sb_dundun():
+    parts = []
+    for i, (f, d) in enumerate(((196, 0.3), (185, 0.3), (175, 1.4))):
+        t = t_axis(d)
+        ph = 2 * np.pi * f * t
+        tone = sum(np.sin(k * ph) / k for k in range(1, 12)) * env(len(t), 0.01, 0.2)
+        parts.append(((0, 0.42, 0.84)[i], tone * 0.35))
+    return mix(2.4, parts)
+
+
 # ------------------------------------------------------------------ menu music (original, chill loop)
 
 def menu_music():
@@ -209,4 +291,13 @@ if __name__ == "__main__":
     write_ogg("meow_hurt", meow(820, 0.3, "hurt", 4))
     write_ogg("meow_sad", meow(520, 1.1, "sad", 5))
     write_ogg("menu_music", menu_music(), 0.8)
+    write_ogg("sb_pay", sb_pay())
+    write_ogg("sb_kill", sb_kill())
+    write_ogg("sb_airhorn", sb_airhorn())
+    write_ogg("sb_boom", sb_boom())
+    write_ogg("sb_drumroll", sb_drumroll())
+    write_ogg("sb_crickets", sb_crickets(), 0.7)
+    write_ogg("sb_scratch", sb_scratch())
+    write_ogg("sb_clown", sb_clown(), 0.8)
+    write_ogg("sb_dundun", sb_dundun())
     print("sounds written to", OUT)

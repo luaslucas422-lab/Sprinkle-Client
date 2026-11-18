@@ -52,7 +52,8 @@ var Catalog = []ExtraMod{
 	{"entityculling", "Entity Culling", "Skips drawing mobs you can't see", "Performance", true},
 	{"iris", "Iris Shaders", "Shaders support (no shader on until you pick one)", "Extras", true},
 	{"zoomify", "Zoomify", "Zoom in with C", "Extras", true},
-	{"modmenu", "Mod Menu", "See and configure your mods", "Extras", true},
+	{"modmenu", "Mod Menu", "See and configure your mods (Donut themed)", "Extras", true},
+	{"simple-voice-chat", "Simple Voice Chat", "Proximity voice chat + Donut SMP Soundboard", "Extras", true},
 }
 
 // Settings is saved in <gameDir>/launcher.json.
@@ -427,6 +428,19 @@ func writeProfile(p Paths, versionID string, s Settings) error {
 	}
 	b, _ := json.MarshalIndent(root, "", "  ")
 	return os.WriteFile(file, b, 0o644)
+}
+
+// SaveMenuVideo puts the player's own video in the Sprinkle config so it loops next to Rage Quit.
+func SaveMenuVideo(p Paths, name string, data []byte) error {
+	dir := filepath.Join(p.GameDir, "config", "sprinkleclient", "menu_video")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
+	}
+	old, _ := os.ReadDir(dir)
+	for _, e := range old {
+		_ = os.Remove(filepath.Join(dir, e.Name()))
+	}
+	return os.WriteFile(filepath.Join(dir, filepath.Base(name)), data, 0o644)
 }
 
 // RemoveProfile takes Sprinkle Client out of the Minecraft Launcher (keeps worlds and settings).

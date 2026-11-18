@@ -44,7 +44,7 @@ public final class Features {
 
     public static final List<Feature> ALL = new ArrayList<>();
     public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Sounds.id("sprinkle"));
-    public static KeyBinding openMenu, editScoreboard, setBase;
+    public static KeyBinding openMenu, editScoreboard, setBase, soundboard;
 
     static {
         Config c = Config.get();
@@ -59,6 +59,8 @@ public final class Features {
         add("auction_prices", "Auction Prices", "Shows what an item goes for on the auction house", () -> c.auctionPrices, v -> c.auctionPrices = v);
         add("shulker_preview", "Shulker Preview", "Hold Shift over a shulker box to see what's inside", () -> c.shulkerTooltip, v -> c.shulkerTooltip = v);
         add("map_preview", "Map Preview", "Hover over a map to see it", () -> c.mapTooltip, v -> c.mapTooltip = v);
+        add("anti_leak", "Anti-Leak", "No random block rotation, so screenshots can't find your base",
+                () -> c.antiLeak, v -> { c.antiLeak = v; AntiLeak.changed(); });
         add("sky_changer", "Sky Changer", "Uses your own picture as the sky", () -> c.skyChanger, v -> c.skyChanger = v);
     }
 
@@ -74,6 +76,7 @@ public final class Features {
     public static void registerKeys() {
         openMenu = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.menu", GLFW.GLFW_KEY_RIGHT_SHIFT, CATEGORY));
         editScoreboard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.edit_scoreboard", InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
+        soundboard = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.soundboard", InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
         setBase = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.set_base", InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));
         for (Feature f : ALL) {
             f.key = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.sprinkleclient.toggle." + f.id, InputUtil.UNKNOWN_KEY.getCode(), CATEGORY));

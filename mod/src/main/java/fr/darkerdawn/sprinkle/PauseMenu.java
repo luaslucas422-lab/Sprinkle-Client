@@ -32,6 +32,9 @@ public final class PauseMenu {
                 rageBannerUntil = System.currentTimeMillis() + 2500;
             }
             if (screen instanceof GameMenuScreen && Config.get().themedPause) themePause(client, screen, w, h);
+            String cls = screen.getClass().getName();
+            if (cls.startsWith("com.terraformersmc.modmenu.gui.")) themeModMenu(client, screen, w, h);
+            if (cls.startsWith("de.maxhenkel.voicechat.gui.")) themeVoiceChat(client, screen, w, h, cls.endsWith(".VoiceChatScreen"));
             if (screen instanceof TitleScreen) {
                 // vanilla menu is on: keep a way back to the Donut menu
                 Screens.getButtons(screen).add(new SprinkleButton(w - 24, h - 24, 20, 20, Text.empty(),
@@ -60,6 +63,28 @@ public final class PauseMenu {
                 });
             }
         });
+    }
+
+    /** Mod Menu, Donut style: sky, sprinkles and the donut logo. */
+    private static void themeModMenu(MinecraftClient client, Screen screen, int w, int h) {
+        ScreenEvents.afterBackground(screen).register((s, g, mx, my, d) -> {
+            g.fillGradient(0, 0, w, h, 0xCC2EA1FC, 0xEE0B5CC2);
+            Theme.sprinkles(g, 0, 0, w, h, 21, 90);
+        });
+        ScreenEvents.afterRender(screen).register((s, g, mx, my, d) -> {
+            Textures.draw(g, Textures.DONUT, 4, 3, 18, 18, Textures.DONUT_SIZE, Textures.DONUT_SIZE, 0xFFFFFFFF);
+            g.drawTextWithShadow(client.textRenderer, "§lDonut SMP §r§bMods", 25, 8, Theme.WHITE);
+        });
+    }
+
+    /** Simple Voice Chat, Donut style, plus the Donut SMP Soundboard button on its main window. */
+    private static void themeVoiceChat(MinecraftClient client, Screen screen, int w, int h, boolean main) {
+        ScreenEvents.afterBackground(screen).register((s, g, mx, my, d) -> Theme.sprinkles(g, 0, 0, w, h, 33, 60));
+        if (main) {
+            int panelBottom = (h - 76) / 2 + 76;
+            Screens.getButtons(screen).add(new SprinkleButton(w / 2 - 97, panelBottom + 4, 195, 20, Text.literal("Donut SMP Soundboard"),
+                    b -> client.setScreen(new fr.darkerdawn.sprinkle.screen.SoundboardScreen(screen))));
+        }
     }
 
     private static boolean isKey(ClickableWidget w, String key) {

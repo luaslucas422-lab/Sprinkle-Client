@@ -35,6 +35,7 @@ public class ModsScreen extends SprinkleScreen {
             switch (f.id) {
                 case "fake_scoreboard" -> button(ex, y, 56, "Edit", b -> client.setScreen(new ScoreboardEditorScreen(this)));
                 case "base_alarm" -> button(ex, y, 56, "Set base", b -> setBase());
+                case "anti_leak" -> button(ex, y, 56, "Blocks", b -> client.setScreen(new AntiLeakScreen(this)));
                 case "sky_changer" -> button(ex, y, 56, "Folder", b -> Util.getOperatingSystem().open(SkyChanger.dir().toFile()));
                 default -> { }
             }
@@ -44,8 +45,9 @@ public class ModsScreen extends SprinkleScreen {
             button(px + 8, by, 20, "<", b -> { page = (page + pages - 1) % pages; clearAndInit(); });
             button(px + 30, by, 20, ">", b -> { page = (page + 1) % pages; clearAndInit(); });
         }
-        button(width / 2 - 104, by, 100, "Change keys", b -> client.setScreen(new KeybindsScreen(this, client.options)));
-        button(width / 2 + 4, by, 100, "Done", b -> close());
+        button(width / 2 - 120, by, 76, "Soundboard", b -> client.setScreen(new SoundboardScreen(this)));
+        button(width / 2 - 40, by, 76, "Keys", b -> client.setScreen(new KeybindsScreen(this, client.options)));
+        button(width / 2 + 40, by, 76, "Done", b -> close());
     }
 
     private void setBase() {

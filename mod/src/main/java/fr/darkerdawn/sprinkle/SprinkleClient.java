@@ -56,6 +56,7 @@ public class SprinkleClient implements ClientModInitializer {
                 while (Features.openMenu.wasPressed()) if (client.currentScreen == null) client.setScreen(new ModsScreen(null));
                 while (Features.editScoreboard.wasPressed()) if (client.currentScreen == null) client.setScreen(new ScoreboardEditorScreen(null));
                 while (Features.setBase.wasPressed()) setBaseHere(client);
+                while (Features.soundboard.wasPressed()) if (client.currentScreen == null) client.setScreen(new fr.darkerdawn.sprinkle.screen.SoundboardScreen(null));
             }
             if (Smoke.ON) Smoke.tick(client);
         });
@@ -79,6 +80,8 @@ public class SprinkleClient implements ClientModInitializer {
 
         ModContainer me = FabricLoader.getInstance().getModContainer("sprinkleclient").orElseThrow();
         ResourceLoader.registerBuiltinPack(Sounds.id("donut_smp"), me, Text.literal("Donut SMP"), PackActivationType.DEFAULT_ENABLED);
+        ResourceLoader.registerBuiltinPack(Sounds.id("donut_stone"), me, Text.literal("Donut Stone"), PackActivationType.DEFAULT_ENABLED);
+        ResourceLoader.registerBuiltinPack(Sounds.id("donut_voicechat"), me, Text.literal("Donut Voice Chat"), PackActivationType.DEFAULT_ENABLED);
         ResourceLoader.registerBuiltinPack(Sounds.id("sprinkle_blue"), me, Text.literal("Sprinkle Blue Buttons"), PackActivationType.DEFAULT_ENABLED);
         LOG.info("Sprinkle Client {} ready. Every button leads to Donut SMP.", VERSION);
     }

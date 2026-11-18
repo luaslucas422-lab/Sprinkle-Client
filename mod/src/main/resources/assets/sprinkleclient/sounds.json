@@ -1,8 +1,86 @@
 {
-  "cash": { "sounds": ["sprinkleclient:cash"] },
-  "rage_quit": { "sounds": ["sprinkleclient:rage_quit"] },
-  "menu_music": { "category": "music", "sounds": [{ "name": "sprinkleclient:menu_music", "stream": true }] },
-  "alarm": { "sounds": ["sprinkleclient:alarm"] },
-  "flex": { "sounds": ["sprinkleclient:flex"] },
-  "pop": { "sounds": ["sprinkleclient:pop"] }
+  "cash": {
+    "sounds": [
+      "sprinkleclient:cash"
+    ]
+  },
+  "rage_quit": {
+    "sounds": [
+      "sprinkleclient:rage_quit"
+    ]
+  },
+  "menu_music": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "sprinkleclient:menu_music",
+        "stream": true
+      }
+    ]
+  },
+  "alarm": {
+    "sounds": [
+      "sprinkleclient:alarm"
+    ]
+  },
+  "flex": {
+    "sounds": [
+      "sprinkleclient:flex"
+    ]
+  },
+  "pop": {
+    "sounds": [
+      "sprinkleclient:pop"
+    ]
+  },
+  "sb_pay": {
+    "sounds": [
+      "sprinkleclient:sb_pay"
+    ]
+  },
+  "sb_kill": {
+    "sounds": [
+      "sprinkleclient:sb_kill"
+    ]
+  },
+  "sb_airhorn": {
+    "sounds": [
+      "sprinkleclient:sb_airhorn"
+    ]
+  },
+  "sb_boom": {
+    "sounds": [
+      "sprinkleclient:sb_boom"
+    ]
+  },
+  "sb_drumroll": {
+    "sounds": [
+      "sprinkleclient:sb_drumroll"
+    ]
+  },
+  "sb_crickets": {
+    "sounds": [
+      "sprinkleclient:sb_crickets"
+    ]
+  },
+  "sb_scratch": {
+    "sounds": [
+      "sprinkleclient:sb_scratch"
+    ]
+  },
+  "sb_clown": {
+    "sounds": [
+      "sprinkleclient:sb_clown"
+    ]
+  },
+  "sb_dundun": {
+    "sounds": [
+      "sprinkleclient:sb_dundun"
+    ]
+  },
+  "meow1": {
+    "sounds": [
+      "sprinkleclient:meow1"
+    ]
+  }
 }

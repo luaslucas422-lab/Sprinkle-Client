@@ -45,6 +45,9 @@ public final class Config {
     public boolean showDeathWaypoint = true;
     public boolean skyChanger = true; // only does something once a picture is in the sky folder
     public boolean fakeScoreboard = false;
+    public boolean antiLeak = true;
+    public List<String> antiLeakBlocks = new ArrayList<>(DEFAULT_ANTI_LEAK);
+    public boolean menuVideo = true;
     public boolean auctionPrices = true;
     public boolean shulkerTooltip = true;
     public boolean mapTooltip = true;
@@ -81,6 +84,10 @@ public final class Config {
         public String team = "Donut Gang";
         public String footer = "donutsmp.net";
     }
+
+    public static final List<String> DEFAULT_ANTI_LEAK = List.of(
+            "minecraft:stone", "minecraft:deepslate", "minecraft:grass_block", "minecraft:dirt", "minecraft:sand",
+            "minecraft:red_sand", "minecraft:netherrack", "minecraft:bedrock", "minecraft:mycelium", "minecraft:podzol");
 
     public static final class DeathSaverRecord {
         public int x, y, z;
@@ -140,6 +147,7 @@ public final class Config {
         if (c.spawnerPrices == null || c.spawnerPrices.isEmpty()) c.spawnerPrices = defaultPrices();
         if (c.deaths == null) c.deaths = new ArrayList<>();
         if (c.fake == null) c.fake = new FakeBoard();
+        if (c.antiLeakBlocks == null) c.antiLeakBlocks = new ArrayList<>(DEFAULT_ANTI_LEAK);
         if (c.baseAlarmIgnore == null) c.baseAlarmIgnore = new ArrayList<>();
         if (c.serverIp == null || c.serverIp.isBlank()) c.serverIp = "donutsmp.net";
         if (c.discordUrl == null || c.discordUrl.isBlank()) c.discordUrl = "https://discord.gg/donutsmp";

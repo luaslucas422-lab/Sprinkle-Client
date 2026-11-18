@@ -9,7 +9,8 @@
   "icon": "assets/sprinkleclient/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["fr.darkerdawn.sprinkle.SprinkleClient"]
+    "client": ["fr.darkerdawn.sprinkle.SprinkleClient"],
+    "voicechat": ["fr.darkerdawn.sprinkle.voice.DonutVoicePlugin"]
   },
   "mixins": ["sprinkleclient.mixins.json"],
   "depends": {
@@ -17,5 +18,9 @@
     "minecraft": "~1.21.11",
     "java": ">=21",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "voicechat": "*",
+    "modmenu": "*"
   }
 }

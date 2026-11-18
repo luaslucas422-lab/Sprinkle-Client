@@ -54,6 +54,7 @@
     <button class="btn small" id="launcher">Open Minecraft Launcher</button>
     <button class="btn small" id="folder">Open Sprinkle folder</button>
   </div>
+  <label class="opts-link" id="videoLink">Pick a main menu video (optional)<input type="file" id="video" accept="video/mp4,.mp4,.mov,.m4v,image/gif" style="display:none"></label>
   <div class="opts-link" id="optsLink">Options</div>
   <div class="opts" id="opts"></div>
   <div class="foot">Made by DarkerDawnFR &middot; Fan-made, not affiliated with DrDonut or Donut SMP</div>
@@ -105,6 +106,17 @@ $("install").onclick = () => {
 };
 $("launcher").onclick = async () => { const err = await sprLauncher(); if (err) $("msg").textContent = err; };
 $("folder").onclick = () => sprFolder();
+$("video").onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (f.size > 40 * 1024 * 1024) { $("msg").textContent = "That video is too big (max 40 MB)."; return; }
+  const r = new FileReader();
+  r.onload = async () => {
+    const b64 = r.result.split(",")[1];
+    try { await sprVideo(f.name, b64); $("msg").textContent = "Video saved: " + f.name + ". It loops next to Rage Quit."; }
+    catch (err) { $("msg").textContent = "Couldn't save the video: " + err; }
+  };
+  r.readAsDataURL(f);
+};
 
 window.onProgress = (pct, msg) => { $("fill").style.width = Math.round(pct * 100) + "%"; $("msg").textContent = msg; };
 window.onDone = (ok, msg, skipped) => {

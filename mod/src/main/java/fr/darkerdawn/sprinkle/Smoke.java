@@ -3,7 +3,9 @@ package fr.darkerdawn.sprinkle;
 import fr.darkerdawn.sprinkle.feature.Features;
 import fr.darkerdawn.sprinkle.feature.Money;
 import fr.darkerdawn.sprinkle.feature.Tracker;
+import fr.darkerdawn.sprinkle.screen.AntiLeakScreen;
 import fr.darkerdawn.sprinkle.screen.CreditsScreen;
+import fr.darkerdawn.sprinkle.screen.SoundboardScreen;
 import fr.darkerdawn.sprinkle.screen.JoinLoadingScreen;
 import fr.darkerdawn.sprinkle.screen.ModsScreen;
 import fr.darkerdawn.sprinkle.screen.ScoreboardEditorScreen;
@@ -80,8 +82,10 @@ final class Smoke {
         switch (worldTicks) {
             case 20 -> {
                 check("Donut SMP pack enabled", c.getResourcePackManager().getEnabledIds().stream().anyMatch(id -> id.contains("donut_smp")));
+                check("Donut Stone pack enabled", Packs.enabled("donut_stone"));
+                check("Anti-Leak blocks stone", fr.darkerdawn.sprinkle.feature.AntiLeak.covers(net.minecraft.block.Blocks.STONE));
                 check("Blue buttons pack enabled", c.getResourcePackManager().getEnabledIds().stream().anyMatch(id -> id.contains("sprinkle_blue")));
-                check("all Donut mods registered", Features.ALL.size() == 12);
+                check("all Donut mods registered", Features.ALL.size() == 13);
                 check("money parser", Money.parse("Money $1.5M") == 1_500_000);
                 makeTestSky();
                 SkyChanger.reload();
@@ -109,6 +113,10 @@ final class Smoke {
                         p.getInventory().setStack(0, new ItemStack(Items.SPAWNER, 12));
                         ServerWorld w = srv.getOverworld();
                         w.setTimeOfDay(6000);
+                        for (int i = -3; i <= 3; i++) {
+                            w.setBlockState(net.minecraft.util.math.BlockPos.ofFloored(p.getX() + i, p.getY(), p.getZ() + 7), net.minecraft.block.Blocks.STONE.getDefaultState());
+                            w.setBlockState(net.minecraft.util.math.BlockPos.ofFloored(p.getX() + i, p.getY() + 1, p.getZ() + 7), net.minecraft.block.Blocks.DEEPSLATE.getDefaultState());
+                        }
                         for (int i = 0; i < 3; i++) {
                             var pig = EntityType.PIG.create(w, SpawnReason.COMMAND);
                             if (pig instanceof MobEntity m) {
@@ -172,19 +180,24 @@ final class Smoke {
     private static void title(MinecraftClient c) {
         titleTicks++;
         switch (titleTicks) {
-            case 100 -> {
+            case 160 -> {
                 check("title screen is the Donut menu", c.currentScreen instanceof SprinkleTitleScreen);
+                check("menu video has frames", MenuVideo.ready());
                 shot(c, "main menu");
             }
-            case 102 -> c.setScreen(new CreditsScreen(c.currentScreen));
-            case 120 -> shot(c, "credits");
-            case 122 -> { SettingsScreen.showTab(0); c.setScreen(new SettingsScreen(null)); }
-            case 140 -> shot(c, "settings menu tab");
-            case 142 -> { SettingsScreen.showTab(2); c.setScreen(new SettingsScreen(null)); }
-            case 160 -> shot(c, "settings donut mods tab");
-            case 162 -> c.setScreen(new JoinLoadingScreen(new SprinkleTitleScreen()));
-            case 180 -> shot(c, "join loading screen");
-            case 182 -> {
+            case 162 -> c.setScreen(new CreditsScreen(c.currentScreen));
+            case 180 -> shot(c, "credits");
+            case 182 -> { SettingsScreen.showTab(0); c.setScreen(new SettingsScreen(null)); }
+            case 200 -> shot(c, "settings menu tab");
+            case 202 -> { SettingsScreen.showTab(2); c.setScreen(new SettingsScreen(null)); }
+            case 220 -> shot(c, "settings donut mods tab");
+            case 222 -> c.setScreen(new SoundboardScreen(null));
+            case 238 -> shot(c, "soundboard");
+            case 240 -> c.setScreen(new AntiLeakScreen(null));
+            case 256 -> shot(c, "anti-leak blocks");
+            case 258 -> c.setScreen(new JoinLoadingScreen(new SprinkleTitleScreen()));
+            case 274 -> shot(c, "join loading screen");
+            case 276 -> {
                 c.setScreen(new SprinkleTitleScreen());
                 check("config file saved", Files.exists(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("sprinkleclient.json")));
                 System.out.println("[SPRINKLE-SMOKE] done, failures=" + fails);

@@ -44,6 +44,9 @@ jobs:
         env: { SPRINKLE_SMOKE: '1' }
         run: |
           printf 'onboardAccessibility:false\ntutorialStep:none\nnarrator:0\nsoundCategory_master:0.0\nguiScale:2\n' > run/options.txt
+          mkdir -p run/config/sprinkleclient/menu_video
+          ffmpeg -loglevel error -y -f lavfi -i testsrc2=size=576x1024:rate=30 -t 3 -c:v libx264 -profile:v high -pix_fmt yuv420p run/config/sprinkleclient/menu_video/test.mp4
+          ls -la run/config/sprinkleclient/menu_video
           xvfb-run -a -s "-screen 0 1280x720x24" timeout 1200 gradle runClient > client.out 2>&1 || echo "EXIT $?"
           cp client.out client-full.out
           echo "=====CLIENTLOG"

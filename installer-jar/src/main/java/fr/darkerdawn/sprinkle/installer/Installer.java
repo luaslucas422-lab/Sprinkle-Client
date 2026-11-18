@@ -46,7 +46,8 @@ public final class Installer {
             new ExtraMod("entityculling", "Entity Culling", "Skips hidden mobs"),
             new ExtraMod("iris", "Iris Shaders", "Shader support"),
             new ExtraMod("zoomify", "Zoomify", "Zoom with C"),
-            new ExtraMod("modmenu", "Mod Menu", "See your mods"));
+            new ExtraMod("modmenu", "Mod Menu", "See your mods (Donut themed)"),
+            new ExtraMod("simple-voice-chat", "Simple Voice Chat", "Voice chat + Donut SMP Soundboard"));
 
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     static final HttpClient HTTP = HttpClient.newBuilder().proxy(java.net.ProxySelector.getDefault()).connectTimeout(Duration.ofSeconds(20)).followRedirects(HttpClient.Redirect.NORMAL).build();
@@ -322,6 +323,22 @@ public final class Installer {
             bar.setAlignmentX(0.5f);
             bar.setVisible(false);
             JLabel msg = label(" ", 13f, Font.PLAIN, CREAM);
+            JButton video = new JButton("Pick a main menu video (optional)");
+            style(video, DOUGH, 12f);
+            video.addActionListener(e -> {
+                JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Videos (.mp4, .mov, .gif)", "mp4", "m4v", "mov", "gif"));
+                if (fc.showOpenDialog(f) != JFileChooser.APPROVE_OPTION) return;
+                try {
+                    Path dir = gameDir(minecraftDir()).resolve("config").resolve("sprinkleclient").resolve("menu_video");
+                    Files.createDirectories(dir);
+                    try (var old = Files.list(dir)) { for (Path p : old.toList()) Files.deleteIfExists(p); }
+                    Files.copy(fc.getSelectedFile().toPath(), dir.resolve(fc.getSelectedFile().getName()), StandardCopyOption.REPLACE_EXISTING);
+                    msg.setText("Video saved. It loops next to Rage Quit.");
+                } catch (IOException ex) {
+                    msg.setText("Couldn't save the video: " + ex.getMessage());
+                }
+            });
             JButton options = new JButton("Options");
             style(options, DOUGH, 13f);
             JLabel foot = label("Made by DarkerDawnFR · Fan-made, not affiliated with DrDonut or Donut SMP", 10f, Font.PLAIN, new Color(0xCFE6FF));
@@ -383,6 +400,8 @@ public final class Installer {
             root.add(Box.createVerticalStrut(8));
             root.add(msg);
             root.add(Box.createVerticalGlue());
+            root.add(video);
+            root.add(Box.createVerticalStrut(8));
             root.add(options);
             root.add(Box.createVerticalStrut(10));
             root.add(foot);

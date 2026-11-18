@@ -3,6 +3,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -71,6 +72,13 @@ func main() {
 			return err.Error()
 		}
 		return ""
+	})
+	_ = w.Bind("sprVideo", func(name, b64 string) error {
+		data, err := base64.StdEncoding.DecodeString(b64)
+		if err != nil {
+			return err
+		}
+		return SaveMenuVideo(paths(), name, data)
 	})
 	_ = w.Bind("sprFolder", func() { OpenFolder(paths().GameDir) })
 	_ = w.Bind("sprClose", func() { w.Terminate() })

@@ -10,7 +10,7 @@ Every button says **Donut SMP**, and every one of them takes you to Donut SMP.
 - **Mac / Linux:** download **SprinkleClient-Installer.jar** and double-click it (needs Java 17+).
 
 Then open the Minecraft Launcher, pick the **Sprinkle Client** profile and press **Play**.
-The installer adds Fabric for 1.21.11, Sprinkle Client and the speed mods (Sodium, Lithium, FerriteCore, ImmediatelyFast, Entity Culling, Iris, Zoomify, Mod Menu). Untick any of them under **Options**.
+The installer adds Fabric for 1.21.11, Sprinkle Client and the speed mods (Sodium, Lithium, FerriteCore, ImmediatelyFast, Entity Culling, Iris, Zoomify, Mod Menu, Simple Voice Chat). Untick any of them under **Options**.
 
 ## The main menu
 - Donut SMP logo (drop your own `logo.png` in `config/sprinkleclient/` to replace it).
@@ -38,10 +38,20 @@ Each has an on/off switch and its own keybind (Options → Controls → Sprinkle
 | Auction Prices | "Auction: $X" under an item's tooltip: the cheapest listing on the Donut SMP auction house (official DonutSMP API). Type `/api` on Donut SMP once and Sprinkle grabs your key (or paste it in Settings → Links) |
 | Shulker Preview | Hold **Shift** over a shulker box to see what's inside (bundles show theirs already) |
 | Map Preview | Hover over a map to see it |
+| Anti-Leak | Stone, deepslate, grass, dirt, sand, netherrack, bedrock... always use the same rotation, so screenshots can't be used to find your base. Add/remove blocks (or the block you're looking at) in its **Blocks** menu. "Donut stone" turns stone and deepslate into donut tiles |
+| Soundboard | Donut SMP Soundboard (pay ding, kill, ka-ching, air horn, boom, sad trombone, meow, drumroll...). With Simple Voice Chat it plays into your voice too |
+
+## Main menu video
+Put an `.mp4` or `.gif` in `config/sprinkleclient/menu_video/` (or pick one in the installer) and it loops where the button next to Rage Quit was. Hover it to see it bigger. It stops when you leave the menu.
+
+## Mod Menu and Simple Voice Chat
+Both come pre-installed and are themed Donut SMP style: blue sky, sprinkles and the donut logo in Mod Menu; donut icons, a frosting window and a **Donut SMP Soundboard** button in Simple Voice Chat.
 
 ## Resource packs (on by default)
 - **Donut SMP** – cursed: pigs are frosted donut-pigs that meow, cows and chickens meow too, sheep go ka-ching, the sun and moon are donuts.
 - **Sprinkle Blue Buttons** – blue frosting buttons everywhere.
+- **Donut Stone** – stone and deepslate become donut tiles.
+- **Donut Voice Chat** – Donut icons for Simple Voice Chat.
 
 ## Build
 - `mod/` – Fabric mod (`gradle build`).

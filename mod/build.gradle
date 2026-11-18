@@ -6,6 +6,11 @@ version = "${project.mod_version}+mc${project.minecraft_version}"
 group = 'fr.darkerdawn.sprinkle'
 base { archivesName = 'SprinkleClient' }
 
+repositories {
+    maven { name = 'Henkelmax'; url = 'https://maven.maxhenkel.de/repository/public' }
+    mavenCentral()
+}
+
 loom {
     runs {
         client {
@@ -22,6 +27,14 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // looping main-menu video (pure-Java H.264 decoder), shipped inside our jar
+    implementation 'org.jcodec:jcodec:0.2.5'
+    implementation 'org.jcodec:jcodec-javase:0.2.5'
+    include 'org.jcodec:jcodec:0.2.5'
+    include 'org.jcodec:jcodec-javase:0.2.5'
+    // Simple Voice Chat plugin API (only used when Simple Voice Chat is installed)
+    compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

@@ -200,6 +200,136 @@ def moon_phases(donut32):
     return img
 
 
+# ------------------------------------------------------------------ Simple Voice Chat theme (all original art)
+
+RED = (235, 40, 40, 255)
+WHITE = (255, 255, 255, 255)
+
+
+def _canvas(n=16):
+    return Image.new("RGBA", (n, n), (0, 0, 0, 0))
+
+
+def mic_icon(small=False):
+    im = _canvas()
+    d = ImageDraw.Draw(im)
+    if small:
+        d.rounded_rectangle([6, 3, 9, 9], radius=2, fill=FROSTING + (255,), outline=OUTLINE + (255,))
+        d.line([(5, 8), (5, 10), (10, 10), (10, 8)], fill=DOUGH + (255,))
+        d.line([(7, 11), (7, 12)], fill=DOUGH + (255,))
+        return im
+    d.rounded_rectangle([5, 1, 10, 10], radius=3, fill=FROSTING + (255,), outline=OUTLINE + (255,))
+    for (x, y, c) in ((7, 3, SPRINKLES[0]), (8, 6, SPRINKLES[1]), (6, 8, SPRINKLES[2])):
+        im.putpixel((x, y), c + (255,))
+    d.line([(3, 7), (3, 10), (5, 12), (10, 12), (12, 10), (12, 7)], fill=DOUGH + (255,), width=1)
+    d.line([(7, 13), (8, 13)], fill=DOUGH + (255,))
+    d.line([(5, 14), (10, 14)], fill=OUTLINE + (255,))
+    return im
+
+
+def speaker_icon(small=False):
+    im = _canvas()
+    d = ImageDraw.Draw(im)
+    if small:
+        d.polygon([(3, 6), (5, 6), (8, 3), (8, 12), (5, 9), (3, 9)], fill=FROSTING + (255,), outline=OUTLINE + (255,))
+        return im
+    d.polygon([(1, 5), (4, 5), (8, 1), (8, 14), (4, 10), (1, 10)], fill=FROSTING + (255,), outline=OUTLINE + (255,))
+    d.arc([6, 4, 12, 11], -60, 60, fill=DOUGH + (255,))
+    d.arc([6, 1, 15, 14], -60, 60, fill=DOUGH_L + (255,))
+    return im
+
+
+def slash(im):
+    d = ImageDraw.Draw(im)
+    d.line([(2, 13), (13, 2)], fill=RED, width=2)
+    return im
+
+
+def forbidden(im):
+    d = ImageDraw.Draw(im)
+    d.ellipse([0, 0, 15, 15], outline=RED, width=2)
+    d.line([(3, 12), (12, 3)], fill=RED, width=2)
+    return im
+
+
+def two_donuts():
+    im = _canvas()
+    a = pixel_donut(10)
+    im.alpha_composite(a, (0, 1))
+    im.alpha_composite(a, (6, 5))
+    return im
+
+
+def eye_icon():
+    im = _canvas()
+    d = ImageDraw.Draw(im)
+    d.ellipse([1, 4, 14, 11], fill=WHITE, outline=OUTLINE + (255,))
+    d.ellipse([5, 5, 10, 10], fill=FROSTING + (255,))
+    d.ellipse([7, 7, 8, 8], fill=OUTLINE + (255,))
+    return im
+
+
+def sheet(cells):
+    im = _canvas(32)
+    for i, c in enumerate(cells):
+        if c is not None:
+            im.alpha_composite(c, ((i % 2) * 16, (i // 2) * 16))
+    return im
+
+
+def voicechat_textures(root):
+    icons = os.path.join(root, "assets/voicechat/textures/icons")
+    gui = os.path.join(root, "assets/voicechat/textures/gui")
+    m, sp = mic_icon, speaker_icon
+    files = {
+        "microphone": m(), "microphone_off": slash(m()), "microphone_forced_off": forbidden(m()), "microphone_whisper": m(True),
+        "speaker": sp(), "speaker_off": slash(sp()), "speaker_forced_off": forbidden(sp()), "speaker_whisper": sp(True),
+        "speaker_small_off": slash(sp(True)), "test_speaker": sp(), "other_volume": sp(),
+        "group": two_donuts(), "invite_button": two_donuts(), "lock": None, "leave": None, "adjust_volumes": None,
+        "device_selected": None, "disconnected": None, "talk_outline": None,
+    }
+    lock = _canvas(); d = ImageDraw.Draw(lock)
+    d.arc([4, 1, 11, 9], 180, 360, fill=DOUGH + (255,), width=2); d.rectangle([3, 7, 12, 14], fill=FROSTING + (255,), outline=OUTLINE + (255,))
+    lock.putpixel((7, 10), WHITE); lock.putpixel((8, 10), WHITE)
+    files["lock"] = lock
+    leave = _canvas(); d = ImageDraw.Draw(leave)
+    d.rectangle([1, 2, 7, 13], outline=OUTLINE + (255,), fill=FROSTING + (255,)); d.line([(6, 8), (14, 8)], fill=RED, width=2); d.polygon([(11, 5), (14, 8), (11, 11)], fill=RED)
+    files["leave"] = leave
+    adj = _canvas(); d = ImageDraw.Draw(adj)
+    for y, x in ((3, 10), (8, 4), (13, 8)):
+        d.line([(1, y), (14, y)], fill=OUTLINE + (255,)); d.rectangle([x - 1, y - 2, x + 1, y + 2], fill=FROSTING + (255,), outline=OUTLINE + (255,))
+    files["adjust_volumes"] = adj
+    files["device_selected"] = pixel_donut(12)
+    disc = _canvas(); d = ImageDraw.Draw(disc)
+    d.rectangle([5, 1, 6, 4], fill=OUTLINE + (255,)); d.rectangle([9, 1, 10, 4], fill=OUTLINE + (255,)); d.rounded_rectangle([3, 4, 12, 10], radius=2, fill=FROSTING + (255,), outline=OUTLINE + (255,)); d.line([(7, 10), (7, 14)], fill=DOUGH + (255,), width=2)
+    files["disconnected"] = slash(disc)
+    outline = _canvas(); d = ImageDraw.Draw(outline)
+    d.rectangle([0, 0, 15, 15], outline=FROSTING_L + (255,), width=1)
+    outline.putpixel((0, 0), SPRINKLES[0] + (255,)); outline.putpixel((15, 15), SPRINKLES[1] + (255,))
+    files["talk_outline"] = outline
+    for name, img in files.items():
+        save(img, os.path.join(icons, name + ".png"))
+    # 32x32 button sheets: [normal, off / forced, -]
+    save(sheet([m(), slash(m()), forbidden(m()), None]), os.path.join(icons, "microphone_button.png"))
+    save(sheet([sp(), slash(sp()), forbidden(sp()), None]), os.path.join(icons, "speaker_button.png"))
+    save(sheet([eye_icon(), slash(eye_icon()), None, None]), os.path.join(icons, "hide_button.png"))
+    save(sheet([two_donuts(), slash(two_donuts()), None, None]), os.path.join(icons, "group_hud_button.png"))
+    rec_off = _canvas(); ImageDraw.Draw(rec_off).ellipse([2, 2, 13, 13], fill=(40, 50, 80, 255), outline=OUTLINE + (255,))
+    rec_on = pixel_donut(14); rec_on2 = _canvas(); rec_on2.alpha_composite(rec_on, (1, 1))
+    save(sheet([rec_off, rec_on2, None, None]), os.path.join(icons, "record_button.png"))
+    # main voice chat window (195x76 used at the top-left of a 256x256 sheet)
+    panel = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
+    d = ImageDraw.Draw(panel)
+    d.rectangle([0, 0, 194, 75], fill=OUTLINE + (255,))
+    d.rectangle([2, 2, 192, 73], fill=(10, 42, 92, 255))
+    d.rectangle([2, 2, 192, 4], fill=FROSTING + (255,))
+    r = random.Random(9)
+    for _ in range(50):
+        x, y = r.randint(4, 188), r.randint(6, 70)
+        d.rectangle([x, y, x + (2 if r.random() < 0.5 else 0), y + (0 if r.random() < 0.5 else 1)], fill=r.choice(SPRINKLES) + (160,))
+    save(panel, os.path.join(gui, "gui_voicechat.png"))
+
+
 def write_json(path, data):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
@@ -250,6 +380,28 @@ def main():
         save(moon, os.path.join(tex, "environment/celestial/moon", phase + ".png"))
     for item in ("cookie", "pumpkin_pie", "bread"):
         save(pixel_donut(16), os.path.join(tex, "item", item + ".png"))
+
+    # Donut Stone pack (stone & deepslate become a donut tile; rotation removal is done in code by Anti-Leak)
+    leak = os.path.join(PACKS, "donut_stone")
+    write_json(os.path.join(leak, "pack.mcmeta"), {"pack": {"description": "Donut stone and deepslate", "min_format": 69, "max_format": 2048}})
+    save(pixel_donut(64), os.path.join(leak, "pack.png"))
+    btex = os.path.join(leak, "assets/minecraft/textures/block")
+    small = donut.resize((14, 14), Image.LANCZOS)
+    for name, bg in (("stone", (125, 125, 125)), ("deepslate", (77, 77, 82)), ("deepslate_top", (77, 77, 82))):
+        tile = Image.new("RGBA", (16, 16), bg + (255,))
+        r = random.Random(name)
+        for _ in range(40):
+            x, y = r.randrange(16), r.randrange(16)
+            d = r.choice((-12, -6, 8))
+            tile.putpixel((x, y), tuple(max(0, min(255, c + d)) for c in bg) + (255,))
+        tile.alpha_composite(small, (1, 1))
+        save(tile, os.path.join(btex, name + ".png"))
+
+    # Donut Voice Chat pack (themes Simple Voice Chat when it's installed)
+    vc = os.path.join(PACKS, "donut_voicechat")
+    write_json(os.path.join(vc, "pack.mcmeta"), {"pack": {"description": "Donut SMP theme for Simple Voice Chat", "min_format": 69, "max_format": 2048}})
+    save(pixel_donut(64), os.path.join(vc, "pack.png"))
+    voicechat_textures(vc)
 
     print("art written")
 

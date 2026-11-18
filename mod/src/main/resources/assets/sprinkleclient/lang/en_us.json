@@ -14,5 +14,7 @@
   "key.sprinkleclient.toggle.sky_changer": "Toggle Sky Changer",
   "key.sprinkleclient.toggle.auction_prices": "Toggle Auction Prices",
   "key.sprinkleclient.toggle.shulker_preview": "Toggle Shulker Preview",
-  "key.sprinkleclient.toggle.map_preview": "Toggle Map Preview"
+  "key.sprinkleclient.toggle.map_preview": "Toggle Map Preview",
+  "key.sprinkleclient.toggle.anti_leak": "Toggle Anti-Leak",
+  "key.sprinkleclient.soundboard": "Open Donut SMP Soundboard"
 }
