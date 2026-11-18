@@ -1,0 +1,25 @@
+go: downloading github.com/jchv/go-webview2 v0.0.0-20260205173254-56598839c808
+go: downloading golang.org/x/sys v0.0.0-20210218145245-beda7e5e158e
+go: downloading github.com/jchv/go-winloader v0.0.0-20250406163304-c1995be93bd1
+total 12712
+drwxr-xr-x 2 runner runner    4096 Nov 18 08:18 .
+drwxr-xr-x 5 runner runner    4096 Nov 18 08:18 ..
+-rw-r--r-- 1 runner runner      57 Nov 18 08:18 README.txt
+-rw-r--r-- 1 runner runner 2600771 Nov 18 08:18 SprinkleClient-1.3.1+mc1.21.1.jar
+-rw-r--r-- 1 runner runner 2600682 Nov 18 08:18 SprinkleClient-1.3.1+mc1.21.11.jar
+-rw-r--r-- 1 runner runner 2600742 Nov 18 08:18 SprinkleClient-1.3.1+mc1.21.8.jar
+-rw-r--r-- 1 runner runner 2600401 Nov 18 08:18 SprinkleClient-1.3.1+mc1.21.9.jar
+-rw-r--r-- 1 runner runner 2600766 Nov 18 08:18 SprinkleClient-1.3.1+mc1.21.jar
+go: downloading github.com/tc-hib/go-winres v0.3.3
+go: downloading github.com/tc-hib/winres v0.2.1
+go: downloading github.com/urfave/cli/v2 v2.25.7
+go: downloading github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+go: downloading golang.org/x/image v0.12.0
+go: downloading github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673
+go: downloading github.com/cpuguy83/go-md2man/v2 v2.0.2
+go: downloading github.com/russross/blackfriday/v2 v2.1.0
+total 42080
+drwxr-xr-x  2 runner runner     4096 Nov 18 08:18 .
+drwxr-xr-x 11 runner runner     4096 Nov 18 08:18 ..
+-rwxr-xr-x  1 runner runner 20004352 Nov 18 08:18 SprinkleClient-Installer.exe
+-rwxr-xr-x  1 runner runner 23075840 Nov 18 08:18 SprinkleClient-selftest.exe
