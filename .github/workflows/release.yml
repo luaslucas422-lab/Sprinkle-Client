@@ -1,7 +1,8 @@
 name: Release
+# Push to the "release" branch to publish: the tag comes from mod_version in mod/gradle.properties.
 on:
   push:
-    tags: ['v*']
+    branches: [release]
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -10,6 +11,8 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v4
+      - name: Work out the version
+        run: echo "TAG=v$(grep '^mod_version=' mod/gradle.properties | cut -d= -f2)" >> "$GITHUB_ENV"
       - name: Get the latest successful build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,7 +28,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" out/* \
-            --title "Sprinkle Client ${{ github.ref_name }}" \
+          gh release delete "${{ env.TAG }}" -y --cleanup-tag -R "${{ github.repository }}" 2>/dev/null || true
+          gh release create "${{ env.TAG }}" out/* --target "${{ github.sha }}" \
+            --title "Sprinkle Client ${{ env.TAG }}" \
             --notes "The Donut SMP client. Windows: run **SprinkleClient-Installer.exe**. Mac/Linux: run **SprinkleClient-Installer.jar**. Then open the Minecraft Launcher, pick Sprinkle Client and press Play. Minecraft 1.21.11 (Fabric). Fan-made, not affiliated with DrDonut or Donut SMP." \
             --repo "${{ github.repository }}"
